@@ -19,3 +19,10 @@ class Learner:
     def learning_rate(self, runs: int) -> float:
         """Big steps for a new level, smaller ones as evidence piles up."""
         return max(0.05, 0.3 / math.sqrt(runs + 1))
+
+    def _update_averages(self, model: LevelModel, features: RunFeatures) -> None:
+        a = AVERAGE_RATE if model.runs else 1.0
+        model.win_rate += a * (features.won - model.win_rate)
+        model.coin_ratio += a * (features.coin_ratio - model.coin_ratio)
+        model.damage += a * (features.damage - model.damage)
+        model.run_seconds += a * (features.seconds - model.run_seconds)
