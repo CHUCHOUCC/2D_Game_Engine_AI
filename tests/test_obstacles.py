@@ -63,3 +63,9 @@ def test_ids_are_unique_and_new():
     ids = [o["id"] for o in objects]
     assert len(ids) == len(set(ids))
     assert "ai-wall-1" not in ids
+
+
+
+def test_same_scene_and_model_give_the_same_obstacles():
+    assert generate(count=8) == generate(count=8)
+    assert generate(count=8) != generate(count=8, difficulty=0.9)
