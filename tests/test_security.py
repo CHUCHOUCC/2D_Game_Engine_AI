@@ -48,3 +48,9 @@ def test_a_token_cannot_be_used_twice(monkeypatch):
     response = c.get("/info", headers=headers)
     assert response.status_code == 401
     assert response.json()["detail"] == "Service token already used"
+
+
+
+def test_short_or_missing_key_returns_503(monkeypatch):
+    assert client(monkeypatch, key="").get("/info", headers=auth()).status_code == 503
+    assert client(monkeypatch, key="short").get("/info", headers=auth()).status_code == 503
