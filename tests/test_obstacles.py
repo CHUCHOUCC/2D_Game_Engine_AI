@@ -25,3 +25,12 @@ def test_generates_the_requested_number_of_obstacles():
 def test_default_count_is_the_model_budget():
     model = LevelModel(difficulty=0.95)
     assert len(ObstacleGenerator(model).generate(SCENE)) == model.obstacle_budget()
+
+
+
+def test_obstacles_never_overlap_each_other_or_the_scene():
+    objects = generate(count=25)
+    boxes = [AABB.of_object(o) for o in SCENE + objects]
+    for i, a in enumerate(boxes):
+        for b in boxes[i + 1:]:
+            assert not a.overlaps(b)
