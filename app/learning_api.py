@@ -48,3 +48,14 @@ def obstacles(body: ObstacleRequest):
         "difficulty": model.difficulty,
         "open_area": round(open_area_ratio(scene + objects), 4),
     }
+
+
+
+@router.get("/info")
+def info():
+    return {
+        "world": {"width": WORLD_WIDTH, "height": WORLD_HEIGHT, "tile": TILE_SIZE},
+        "kinds": list(ALL_KINDS),
+        "sizes": {kind: list(size) for kind, size in SIZES.items()},
+        "default_model": LevelModel().to_dict(),
+    }
