@@ -69,3 +69,10 @@ def test_info_describes_the_world(monkeypatch):
     assert "house" in body["kinds"]
     assert body["sizes"]["house"] == [96, 96]
     assert body["default_model"]["difficulty"] == 0.5
+
+
+
+def test_learning_routes_need_a_token(monkeypatch):
+    c = client(monkeypatch)
+    assert c.post("/learn", json={"run": WIN}).status_code == 401
+    assert c.post("/obstacles", json={}).status_code == 401
