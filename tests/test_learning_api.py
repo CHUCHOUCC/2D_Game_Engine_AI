@@ -27,3 +27,10 @@ def test_learn_continues_from_the_given_model(monkeypatch):
     second = c.post("/learn", json={"model": first, "run": WIN}, headers=auth()).json()["model"]
     assert second["runs"] == 2
     assert second["difficulty"] > first["difficulty"]
+
+
+
+def test_learn_rejects_invalid_runs(monkeypatch):
+    c = client(monkeypatch)
+    assert c.post("/learn", json={"run": {**WIN, "outcome": "draw"}}, headers=auth()).status_code == 422
+    assert c.post("/learn", json={"model": {}}, headers=auth()).status_code == 422
