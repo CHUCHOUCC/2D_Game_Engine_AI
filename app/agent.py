@@ -41,3 +41,18 @@ def describe_scene(scene: list) -> str:
     player = next((o for o in scene if o.get("kind") == "player"), None)
     where = f" The player starts at ({player['x']:.0f}, {player['y']:.0f})." if player else ""
     return f"The scene already has: {parts}.{where} Do not place objects on top of them."
+
+
+
+class GameAgent:
+    """Turns a natural-language request into validated scene objects.
+
+    Whatever the model answers is untrusted: it is parsed and checked against
+    the schema, then the physics engine pushes new objects out of anything
+    they overlap before they leave this class.
+    """
+
+    MAX_OBJECTS = 30
+
+    def __init__(self, provider: AiProvider):
+        self._provider = provider
