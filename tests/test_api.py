@@ -52,3 +52,11 @@ def test_generate_moves_objects_off_the_existing_scene(monkeypatch):
 def test_provider_failure_returns_502(monkeypatch):
     client = client_with(FailingProvider(), monkeypatch)
     assert client.post("/generate", json={"prompt": "a coin"}, headers=auth()).status_code == 502
+
+
+
+def test_empty_prompt_and_huge_scene_are_rejected(monkeypatch):
+    client = client_with(SimulatedProvider(), monkeypatch)
+    assert client.post("/generate", json={"prompt": ""}, headers=auth()).status_code == 422
+    scene = [{"id": str(i), "kind": "box", "x": 1, "y": 1} for i in range(601)]
+    assert client.post("/generate", json={"prompt": "x", "scene": scene}, headers=auth()).status_code == 422
