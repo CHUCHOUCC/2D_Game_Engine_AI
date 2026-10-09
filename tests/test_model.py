@@ -24,3 +24,13 @@ def test_garbage_falls_back_to_defaults():
     assert broken.difficulty == 0.5
     assert broken.runs == 0
     assert broken.weights["wall"] == 1.0
+
+
+
+def test_out_of_range_values_are_clamped():
+    model = LevelModel.from_dict({"difficulty": 9, "win_rate": -3, "weights": {"spike": 0, "box": 99}})
+    assert model.difficulty == 0.95
+    assert model.win_rate == 0
+    assert model.weights["spike"] == 0.05
+    assert model.weights["box"] == 10
+    assert LevelModel.from_dict({"difficulty": float("nan")}).difficulty == 0.5
