@@ -20,3 +20,9 @@ def test_counts_in_digits_and_words():
     assert len(ask("tres monedas")) == 3
     assert len(ask("two walls")) == 2
     assert len(ask("50 coins")) == 10  # capped
+
+
+
+def test_several_kinds_in_one_request():
+    kinds = [o["kind"] for o in ask("2 monedas y una casa, un enemigo")]
+    assert kinds == ["coin", "coin", "house", "enemy"]
