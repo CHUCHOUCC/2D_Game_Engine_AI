@@ -80,3 +80,10 @@ class PhysicsWorld:
             for b in self.bodies[i + 1:]:
                 contacts += self._separate(a, b)
         return contacts
+
+    def settle(self, max_steps: int = 30) -> int:
+        """Run steps with no time passing until nothing overlaps; returns the steps used."""
+        for steps in range(1, max_steps + 1):
+            if self.step(0.0) == 0:
+                return steps
+        return max_steps
