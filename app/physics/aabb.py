@@ -30,3 +30,8 @@ class AABB:
     @property
     def bottom(self) -> float:
         return self.cy + self.half_h
+
+    @classmethod
+    def of_object(cls, obj: dict) -> "AABB":
+        width, height = SIZES.get(obj["kind"], (32, 32))
+        return cls(float(obj["x"]), float(obj["y"]), width / 2, height / 2)
