@@ -36,3 +36,6 @@ class LevelModel:
     run_seconds: float = 60.0
     weights: dict = field(default_factory=lambda: dict(DEFAULT_WEIGHTS))
     version: int = MODEL_VERSION
+
+    def to_dict(self) -> dict:
+        return asdict(self)
