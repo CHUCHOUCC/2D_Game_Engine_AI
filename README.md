@@ -35,3 +35,16 @@ Every route except `/health` needs `Authorization: Bearer <service token>`.
 | `app/providers/` | `simulated` (no network) or `openai_compatible` (any `/chat/completions` API) |
 | `app/security.py` | Checks the service token: signature, audience, issuer, expiry and replay |
 | `app/main.py`, `app/learning_api.py` | The HTTP routes |
+
+## How the AI learns
+
+Each finished run becomes a performance score between 0 and 1 (winning, coins, damage,
+deaths). The AI is rewarded when that score lands near **0.65**: hard but fair.
+
+- Played too well → difficulty goes up → more obstacles (4 to 20) placed closer to the coins.
+- Struggled → difficulty goes down.
+- Enemies and spikes did not hurt → they get picked more; they overwhelmed the player → less.
+- Coins were hard to reach → fewer walls and houses.
+
+The step size shrinks as runs pile up (0.3 / √(runs + 1), at least 0.05). Details and the
+exact numbers are in [docs/learning.md](docs/learning.md).
