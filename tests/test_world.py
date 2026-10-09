@@ -21,3 +21,9 @@ def test_the_ai_never_generates_a_player():
     assert "player" in ALL_KINDS
     assert "player" not in GENERATED_KINDS
     assert "coin" not in OBSTACLE_KINDS
+
+
+
+def test_every_kind_has_a_size_and_solids_are_known_kinds():
+    assert set(SIZES) == set(ALL_KINDS)
+    assert SOLID_KINDS <= set(ALL_KINDS)
