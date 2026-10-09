@@ -39,3 +39,22 @@ class LevelModel:
 
     def to_dict(self) -> dict:
         return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data) -> "LevelModel":
+        """Read a model sent by the backend. Missing or bad values fall back to
+        defaults, so a corrupted row can never crash the service."""
+        model = cls()
+        if not isinstance(data, dict):
+            return model
+        model.difficulty = _number(data.get("difficulty"), model.difficulty, MIN_DIFFICULTY, MAX_DIFFICULTY)
+        model.runs = int(_number(data.get("runs"), 0, 0, 10**9))
+        model.win_rate = _number(data.get("win_rate"), model.win_rate, 0, 1)
+        model.coin_ratio = _number(data.get("coin_ratio"), model.coin_ratio, 0, 1)
+        model.damage = _number(data.get("damage"), model.damage, 0, 1000)
+        model.run_seconds = _number(data.get("run_seconds"), model.run_seconds, 0, 3600)
+        weights = data.get("weights")
+        if isinstance(weights, dict):
+            for kind in OBSTACLE_KINDS:
+                model.weights[kind] = _number(weights.get(kind), model.weights[kind], MIN_WEIGHT, 10)
+        return model
