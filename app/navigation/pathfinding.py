@@ -38,3 +38,14 @@ def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, in
                 distance[nxt] = distance[cell] + 1
                 pending.append(nxt)
     return None
+
+
+
+def reachable_coin_ids(scene: list, spawn: tuple[float, float]) -> set:
+    """Ids of the coins whose tile is reachable from the spawn point."""
+    grid = OccupancyGrid.from_scene(scene)
+    area = reachable_cells(grid, grid.cell_of(*spawn))
+    return {
+        str(obj["id"]) for obj in scene
+        if obj["kind"] == "coin" and grid.cell_of(obj["x"], obj["y"]) in area
+    }
