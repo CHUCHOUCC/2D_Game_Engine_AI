@@ -34,3 +34,15 @@ def test_learn_rejects_invalid_runs(monkeypatch):
     c = client(monkeypatch)
     assert c.post("/learn", json={"run": {**WIN, "outcome": "draw"}}, headers=auth()).status_code == 422
     assert c.post("/learn", json={"model": {}}, headers=auth()).status_code == 422
+
+
+
+def test_obstacles_endpoint(monkeypatch):
+    scene = [{"id": "hero", "kind": "player", "x": 64, "y": 480},
+             {"id": "c1", "kind": "coin", "x": 800, "y": 480}]
+    response = client(monkeypatch).post("/obstacles", json={"model": {}, "scene": scene, "count": 6}, headers=auth())
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body["objects"]) == 6
+    assert body["difficulty"] == 0.5
+    assert 0 < body["open_area"] <= 1
