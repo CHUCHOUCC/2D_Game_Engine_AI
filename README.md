@@ -67,3 +67,11 @@ python -m pytest
 copy .env.example .env     # then edit AI_SERVICE_KEY (same value as in the backend)
 python -m uvicorn app.main:app --port 8001 --reload
 ```
+
+## Environment variables
+
+| Variable | Meaning |
+|---|---|
+| `AI_SERVICE_KEY` | Shared secret (32+ characters). The backend signs a 60-second JWT with it for every call. |
+| `AI_PROVIDER` | `simulated` (default) or `openai_compatible` |
+| `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` | Only for `openai_compatible`; a missing one gives a clear 503 |
