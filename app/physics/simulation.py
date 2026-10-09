@@ -12,3 +12,14 @@ class PhysicsWorld:
         self.width = width
         self.height = height
         self.bodies: list[Body] = []
+
+    def add(self, body: Body) -> Body:
+        self.bodies.append(body)
+        return body
+
+    @classmethod
+    def from_scene(cls, scene: list) -> "PhysicsWorld":
+        world = cls()
+        for obj in scene:
+            world.add(Body.of_object(obj))
+        return world
