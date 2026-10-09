@@ -40,3 +40,12 @@ A perfect run (performance 1.0) only earns 0.46: the AI prefers levels that chal
 | Lost and took less than half the coins | wall, house × (1 − rate/2) |
 | Won and took every coin | wall, box × (1 + rate/2) |
 | Defeated 3+ enemies | enemy × (1 + rate/2) |
+
+## Placing obstacles (`POST /obstacles`)
+
+- How many: `count`, or the model's budget `round(4 + 16 · difficulty)`.
+- Which kind: drawn with the weights as probabilities.
+- Where: 60 random tiles per obstacle; the invalid ones are dropped (outside the world,
+  overlapping, too close to the spawn point). The rest are scored with
+  `difficulty · closeness_to_a_coin + (1 − difficulty) · random`, and the best one that does
+  not cut off a reachable coin wins.
