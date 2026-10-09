@@ -36,3 +36,32 @@ class ReplayCache:
 
 
 replay_cache = ReplayCache()
+
+
+
+def _unauthorized(detail: str) -> HTTPException:
+    return HTTPException(status_code=401, detail=detail, headers={"WWW-Authenticate": "Bearer"})
+
+
+def require_service_token(credentials: HTTPAuthorizationCredentials = Depends(_bearer)) -> dict:
+    """Only the backend can sign tokens with AI_SERVICE_KEY, so only it can call this service."""
+    key = os.environ.get("AI_SERVICE_KEY", "")
+    if len(key) < MIN_KEY_LENGTH:
+        raise HTTPException(status_code=503, detail="Service key is not configured")
+    if credentials is None:
+        raise _unauthorized("Missing service token")
+    try:
+        claims = jwt.decode(
+            credentials.credentials,
+            key,
+            algorithms=["HS256"],
+            audience=AUDIENCE,
+            issuer=EXPECTED_ISSUER,
+            leeway=LEEWAY_SECONDS,
+            options={"require": ["exp", "iat", "jti", "aud", "iss"]},
+        )
+    except jwt.PyJWTError:
+        raise _unauthorized("Invalid service token")
+    if not replay_cache.first_use(claims["jti"], claims["exp"] + LEEWAY_SECONDS):
+        raise _unauthorized("Service token already used")
+    return claims
