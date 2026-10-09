@@ -41,3 +41,10 @@ def test_difficulty_stays_within_bounds():
     low, _ = learn(LevelModel(), HARD_LOSS, times=200)
     assert high.difficulty <= 0.95
     assert low.difficulty >= 0.05
+
+
+
+def test_easy_wins_favour_hazards():
+    model, _ = learn(LevelModel(), EASY_WIN, times=3)
+    assert model.weights["enemy"] > 0.6
+    assert model.weights["spike"] > 0.5
