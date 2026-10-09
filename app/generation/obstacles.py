@@ -63,3 +63,11 @@ class ObstacleGenerator:
         col = rng.randint(0, cols)
         row = rng.randint(0, rows)
         return (col + tiles / 2) * TILE_SIZE, (row + tiles / 2) * TILE_SIZE
+
+    def _score(self, rng: random.Random, x: float, y: float, coins: list) -> float:
+        if not coins:
+            return rng.random()
+        nearest = min(math.dist((x, y), (c["x"], c["y"])) for c in coins)
+        closeness = 1.0 - min(nearest / 600.0, 1.0)
+        d = self._model.difficulty
+        return d * closeness + (1 - d) * rng.random()
