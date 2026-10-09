@@ -25,3 +25,18 @@ reward = 1 − |performance − 0.65| / 0.65                  (halved if the pla
 ```
 
 A perfect run (performance 1.0) only earns 0.46: the AI prefers levels that challenge the player.
+
+## One learning step (`POST /learn`)
+
+1. `rate = max(0.05, 0.3 / √(runs + 1))`
+2. Moving averages of win rate, coin ratio, damage and time (30 % weight for the new run).
+3. `difficulty += 2 · rate · (performance − 0.65)`, kept between 0.05 and 0.95.
+4. Kind weights:
+
+| What happened | Change |
+|---|---|
+| Won with little damage | enemy, spike × (1 + rate) |
+| Lost with heavy damage | enemy, spike × (1 − rate/2) |
+| Lost and took less than half the coins | wall, house × (1 − rate/2) |
+| Won and took every coin | wall, box × (1 + rate/2) |
+| Defeated 3+ enemies | enemy × (1 + rate/2) |
