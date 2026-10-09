@@ -15,3 +15,15 @@ SYSTEM_PROMPT = (
     f"x and y are the centre of the object; x is between 0 and {WORLD_WIDTH} and y between 0 and {WORLD_HEIGHT}. "
     "Walls and houses block the way, boxes can be pushed, spikes and enemies hurt, coins are collected."
 )
+
+
+
+class AgentError(Exception):
+    """The model's reply could not be turned into valid game objects."""
+
+
+class GameObject(BaseModel):
+    id: str = Field(min_length=1, max_length=64)
+    kind: str
+    x: float = Field(ge=0, le=WORLD_WIDTH)
+    y: float = Field(ge=0, le=WORLD_HEIGHT)
