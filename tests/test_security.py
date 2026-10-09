@@ -14,3 +14,10 @@ def client(monkeypatch, key=KEY):
 
 def test_valid_token_is_accepted(monkeypatch):
     assert client(monkeypatch).get("/info", headers=auth()).status_code == 200
+
+
+
+def test_missing_or_garbage_token_is_rejected(monkeypatch):
+    c = client(monkeypatch)
+    assert c.get("/info").status_code == 401
+    assert c.get("/info", headers={"Authorization": "Bearer nonsense"}).status_code == 401
