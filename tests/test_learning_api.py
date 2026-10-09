@@ -18,3 +18,12 @@ def test_learn_starts_from_an_empty_model(monkeypatch):
     assert body["difficulty"] > 0.5
     assert 0 <= body["reward"] <= 1
     assert body["obstacle_budget"] >= 12
+
+
+
+def test_learn_continues_from_the_given_model(monkeypatch):
+    c = client(monkeypatch)
+    first = c.post("/learn", json={"model": {}, "run": WIN}, headers=auth()).json()["model"]
+    second = c.post("/learn", json={"model": first, "run": WIN}, headers=auth()).json()["model"]
+    assert second["runs"] == 2
+    assert second["difficulty"] > first["difficulty"]
