@@ -30,3 +30,13 @@ def test_drag_stops_but_never_reverses():
     crate.vx, crate.vy = 10, -10
     world.step(1)
     assert (crate.vx, crate.vy) == (0, 0)
+
+
+
+def test_bodies_are_kept_inside_the_world():
+    world = PhysicsWorld()
+    enemy = world.add(Body.of_object(obj("e", "enemy", 20, 20)))
+    enemy.vx = -1000
+    world.step(0.1)
+    assert enemy.box.left == 0
+    assert enemy.vx > 0  # bounced
