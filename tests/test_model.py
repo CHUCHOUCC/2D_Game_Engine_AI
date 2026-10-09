@@ -41,3 +41,10 @@ def test_obstacle_budget_grows_with_difficulty():
     assert LevelModel(difficulty=0.05).obstacle_budget() == 5
     assert LevelModel(difficulty=0.5).obstacle_budget() == 12
     assert LevelModel(difficulty=0.95).obstacle_budget() == 19
+
+
+
+def test_probabilities_sum_to_one():
+    probabilities = LevelModel().probabilities()
+    assert abs(sum(probabilities.values()) - 1) < 1e-9
+    assert probabilities["box"] > probabilities["house"]
