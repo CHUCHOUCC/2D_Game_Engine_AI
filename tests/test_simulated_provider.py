@@ -33,3 +33,8 @@ def test_position_after_en_or_at():
     obj = ask("una pared en 400 300")[0]
     assert (obj["x"], obj["y"]) == (400, 300)
     assert ask("a tree at (90, 70)")[0]["x"] == 90
+
+
+
+def test_unknown_request_gives_one_box_in_the_middle():
+    assert ask("algo bonito") == [{"id": "box-1", "kind": "box", "x": 800.0, "y": 480.0}]
