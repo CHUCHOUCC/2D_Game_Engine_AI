@@ -36,3 +36,13 @@ def test_reachable_cells_stop_at_walls():
     assert len(area) == 6
     assert (4, 0) not in area
     assert reachable_cells(grid, (2, 0)) == set()
+
+
+
+def test_path_length():
+    grid = OccupancyGrid(cols=5, rows=3)
+    grid.block_box(AABB(2 * 32 + 16, 16, 16, 16))
+    grid.block_box(AABB(2 * 32 + 16, 48, 16, 16))
+    assert path_length(grid, (0, 0), (4, 0)) == 8
+    assert path_length(grid, (0, 0), (0, 0)) == 0
+    assert path_length(grid, (0, 0), (2, 0)) is None
