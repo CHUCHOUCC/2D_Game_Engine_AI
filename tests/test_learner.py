@@ -27,3 +27,9 @@ def test_easy_wins_raise_difficulty_and_the_obstacle_budget():
     assert model.difficulty > 0.5
     assert model.obstacle_budget() > LevelModel().obstacle_budget()
     assert model.runs == 5
+
+
+
+def test_hard_losses_lower_difficulty():
+    model, _ = learn(LevelModel(), HARD_LOSS, times=5)
+    assert model.difficulty < 0.5
