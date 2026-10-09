@@ -56,3 +56,14 @@ exact numbers are in [docs/learning.md](docs/learning.md).
 - A solid obstacle (box, wall, house, tree) is rejected if it cuts off a coin the player could reach.
 - Objects asked for with `/generate` are pushed out of what already exists, like Arcade Physics would.
 - Same scene and same model give the same obstacles, so results are repeatable.
+
+## Run locally (PowerShell)
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+python -m pytest
+copy .env.example .env     # then edit AI_SERVICE_KEY (same value as in the backend)
+python -m uvicorn app.main:app --port 8001 --reload
+```
