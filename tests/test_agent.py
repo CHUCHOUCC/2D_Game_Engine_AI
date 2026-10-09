@@ -32,3 +32,9 @@ def test_simulated_provider_creates_the_requested_object_at_the_given_position()
 def test_simulated_provider_understands_spanish_keywords():
     objects = GameAgent(SimulatedProvider()).generate("agrega un enemigo")
     assert objects[0]["kind"] == "enemy"
+
+
+
+def test_reply_wrapped_in_code_fences_is_accepted():
+    reply = '```json\n[{"id": "a", "kind": "box", "x": 100, "y": 200}]\n```'
+    assert agent_replying(reply).generate("x")[0]["id"] == "a"
