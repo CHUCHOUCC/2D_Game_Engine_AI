@@ -40,3 +40,10 @@ def test_performance_from_perfect_to_crushed():
     assert RunFeatures.of(crushed).performance() == 0.0
     middle = RunFeatures.of(run(outcome="lost", coins_collected=2, damage_taken=0)).performance()
     assert 0.0 < middle < 1.0
+
+
+
+def test_reward_is_highest_at_the_target():
+    assert reward(TARGET_PERFORMANCE) == 1.0
+    assert reward(1.0) < 1.0 and reward(0.0) == 0.0
+    assert reward(0.6) > reward(0.3)
