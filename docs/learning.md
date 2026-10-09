@@ -49,3 +49,17 @@ A perfect run (performance 1.0) only earns 0.46: the AI prefers levels that chal
   overlapping, too close to the spawn point). The rest are scored with
   `difficulty · closeness_to_a_coin + (1 − difficulty) · random`, and the best one that does
   not cut off a reachable coin wins.
+
+## Example
+
+A new level, a player who wins without being hit and takes every coin:
+
+| Run | Performance | Reward | Difficulty | Obstacle budget |
+|---|---|---|---|---|
+| 0 | | | 0.50 | 12 |
+| 1 | 1.00 | 0.46 | 0.71 | 15 |
+| 2 | 1.00 | 0.46 | 0.86 | 18 |
+| 3 | 1.00 | 0.46 | 0.95 | 19 |
+
+As the level fills with obstacles the player starts taking damage, performance drops towards
+0.65 and the difficulty settles where the level stays challenging.
