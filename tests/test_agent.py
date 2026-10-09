@@ -49,3 +49,11 @@ def test_reply_that_is_not_json_is_rejected():
 def test_reply_that_is_not_a_list_is_rejected():
     with pytest.raises(AgentError, match="array"):
         agent_replying('{"id": "a"}').generate("x")
+
+
+
+def test_unknown_kind_and_player_are_rejected():
+    for kind in ("dragon", "player"):
+        reply = json.dumps([{"id": "a", "kind": kind, "x": 100, "y": 100}])
+        with pytest.raises(AgentError, match="Unknown kind"):
+            agent_replying(reply).generate("x")
