@@ -47,3 +47,10 @@ def test_spawn_area_is_kept_clear():
     for obj in generate(count=25):
         distance = math.dist((obj["x"], obj["y"]), (PLAYER["x"], PLAYER["y"]))
         assert distance >= (256 if obj["kind"] == "enemy" else 128)
+
+
+
+def test_every_coin_stays_reachable():
+    objects = generate(count=30, difficulty=0.95)
+    spawn = (PLAYER["x"], PLAYER["y"])
+    assert reachable_coin_ids(SCENE + objects, spawn) == {c["id"] for c in COINS}
