@@ -19,3 +19,22 @@ def reachable_cells(grid: OccupancyGrid, start: tuple[int, int]) -> set:
                 seen.add(cell)
                 pending.append(cell)
     return seen
+
+
+
+def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, int]) -> int | None:
+    """Number of steps of the shortest walk from start to goal, or None if blocked."""
+    if not grid.is_free(*start) or not grid.is_free(*goal):
+        return None
+    distance = {start: 0}
+    pending = deque([start])
+    while pending:
+        cell = pending.popleft()
+        if cell == goal:
+            return distance[cell]
+        for dc, dr in NEIGHBOURS:
+            nxt = (cell[0] + dc, cell[1] + dr)
+            if nxt not in distance and grid.is_free(*nxt):
+                distance[nxt] = distance[cell] + 1
+                pending.append(nxt)
+    return None
