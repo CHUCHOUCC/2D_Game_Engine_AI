@@ -19,3 +19,12 @@ SIZES = {
     "coin": (16, 16),
     "enemy": (28, 28),
 }
+
+# Kinds the player cannot walk through.
+SOLID_KINDS = frozenset({"box", "wall", "house", "tree"})
+# Kinds that hurt the player.
+HAZARD_KINDS = frozenset({"spike", "enemy"})
+# Kinds that are picked up.
+COLLECTIBLE_KINDS = frozenset({"coin"})
+# Kinds the generator treats as obstacles (everything but coins).
+OBSTACLE_KINDS = tuple(kind for kind in GENERATED_KINDS if kind not in COLLECTIBLE_KINDS)
