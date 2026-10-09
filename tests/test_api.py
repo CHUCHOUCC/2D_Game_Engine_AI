@@ -29,3 +29,11 @@ def test_health_needs_no_token():
 def test_generate_without_a_token_is_rejected(monkeypatch):
     client = client_with(SimulatedProvider(), monkeypatch)
     assert client.post("/generate", json={"prompt": "a coin"}).status_code == 401
+
+
+
+def test_generate_with_a_token_returns_objects(monkeypatch):
+    client = client_with(SimulatedProvider(), monkeypatch)
+    response = client.post("/generate", json={"prompt": "an enemy at 50 60"}, headers=auth())
+    assert response.status_code == 200
+    assert response.json() == {"objects": [{"id": "enemy-1", "kind": "enemy", "x": 50.0, "y": 60.0}]}
