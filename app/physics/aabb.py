@@ -35,3 +35,10 @@ class AABB:
     def of_object(cls, obj: dict) -> "AABB":
         width, height = SIZES.get(obj["kind"], (32, 32))
         return cls(float(obj["x"]), float(obj["y"]), width / 2, height / 2)
+
+    def overlaps(self, other: "AABB", padding: float = 0.0) -> bool:
+        """True when the boxes intersect; padding grows both boxes (keeps a gap)."""
+        return (
+            abs(self.cx - other.cx) < self.half_w + other.half_w + padding - EPSILON
+            and abs(self.cy - other.cy) < self.half_h + other.half_h + padding - EPSILON
+        )
