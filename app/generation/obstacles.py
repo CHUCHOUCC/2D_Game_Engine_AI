@@ -31,3 +31,10 @@ class ObstacleGenerator:
     def __init__(self, model: LevelModel, seed: int | None = None):
         self._model = model
         self._seed = seed
+
+    def _rng_for(self, scene: list, count: int) -> random.Random:
+        """Same scene + same model -> same obstacles (easy to test and to explain)."""
+        if self._seed is not None:
+            return random.Random(self._seed)
+        key = json.dumps([scene, count, self._model.to_dict()], sort_keys=True, default=str)
+        return random.Random(int(hashlib.sha256(key.encode()).hexdigest()[:16], 16))
