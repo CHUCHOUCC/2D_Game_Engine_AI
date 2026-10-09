@@ -57,3 +57,12 @@ def test_unknown_kind_and_player_are_rejected():
         reply = json.dumps([{"id": "a", "kind": kind, "x": 100, "y": 100}])
         with pytest.raises(AgentError, match="Unknown kind"):
             agent_replying(reply).generate("x")
+
+
+
+def test_out_of_range_position_is_rejected():
+    reply = json.dumps([{"id": "a", "kind": "box", "x": 1601, "y": 1}])
+    with pytest.raises(AgentError, match="out-of-range"):
+        agent_replying(reply).generate("x")
+    inside = json.dumps([{"id": "a", "kind": "box", "x": 1500, "y": 900}])
+    assert agent_replying(inside).generate("x")
