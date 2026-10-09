@@ -60,3 +60,13 @@ def test_empty_prompt_and_huge_scene_are_rejected(monkeypatch):
     assert client.post("/generate", json={"prompt": ""}, headers=auth()).status_code == 422
     scene = [{"id": str(i), "kind": "box", "x": 1, "y": 1} for i in range(601)]
     assert client.post("/generate", json={"prompt": "x", "scene": scene}, headers=auth()).status_code == 422
+
+
+
+def test_misconfigured_real_provider_returns_503(monkeypatch):
+    monkeypatch.setenv("AI_SERVICE_KEY", KEY)
+    monkeypatch.setenv("AI_PROVIDER", "openai_compatible")
+    monkeypatch.delenv("AI_API_KEY", raising=False)
+    response = TestClient(app).post("/generate", json={"prompt": "x"}, headers=auth())
+    assert response.status_code == 503
+    assert "AI_API_KEY" in response.json()["detail"]
