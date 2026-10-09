@@ -42,3 +42,18 @@ class AABB:
             abs(self.cx - other.cx) < self.half_w + other.half_w + padding - EPSILON
             and abs(self.cy - other.cy) < self.half_h + other.half_h + padding - EPSILON
         )
+
+    def penetration(self, other: "AABB") -> tuple[float, float]:
+        """Smallest move of self that separates it from other ((0, 0) if they do not touch).
+
+        It pushes along the axis of least overlap, like Arcade Physics' separate().
+        """
+        dx = other.cx - self.cx
+        overlap_x = self.half_w + other.half_w - abs(dx)
+        dy = other.cy - self.cy
+        overlap_y = self.half_h + other.half_h - abs(dy)
+        if overlap_x <= EPSILON or overlap_y <= EPSILON:
+            return (0.0, 0.0)
+        if overlap_x < overlap_y:
+            return (-overlap_x if dx > 0 else overlap_x, 0.0)
+        return (0.0, -overlap_y if dy > 0 else overlap_y)
