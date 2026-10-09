@@ -33,3 +33,14 @@ class PhysicsWorld:
             speed = getattr(body, axis)
             slowed = max(0.0, abs(speed) - body.drag * dt)
             setattr(body, axis, slowed if speed >= 0 else -slowed)
+
+    def _clamp_to_world(self, body: Body) -> None:
+        box = body.box
+        dx = max(0.0, -box.left) - max(0.0, box.right - self.width)
+        dy = max(0.0, -box.top) - max(0.0, box.bottom - self.height)
+        if dx or dy:
+            body.box = box.moved(dx, dy)
+            if dx:
+                body.vx = -body.vx * body.bounce
+            if dy:
+                body.vy = -body.vy * body.bounce
