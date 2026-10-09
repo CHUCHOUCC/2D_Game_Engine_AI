@@ -33,3 +33,22 @@ def _parts(text: str) -> list:
 
 def _kind_of(part: str):
     return next((name for name, words in _KINDS if any(w in part for w in words)), None)
+
+
+
+def _count_of(part: str, kind_word_at: int) -> int:
+    before = part[:kind_word_at].split()
+    if before:
+        last = before[-1]
+        if last.isdigit():
+            return max(1, min(int(last), MAX_PER_KIND))
+        if last in _NUMBER_WORDS:
+            return _NUMBER_WORDS[last]
+    return 1
+
+
+def _position_of(part: str):
+    match = re.search(r"(?:at|en|in)\s+\(?\s*(\d+)\s*[, ]\s*(\d+)", part)
+    if match:
+        return min(int(match.group(1)), WORLD_WIDTH), min(int(match.group(2)), WORLD_HEIGHT)
+    return None
