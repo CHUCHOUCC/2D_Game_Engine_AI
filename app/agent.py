@@ -62,3 +62,27 @@ class GameAgent:
         user = f"{describe_scene(scene)}\nRequest: {request}"
         objects = self._validate(self._provider.complete(SYSTEM_PROMPT, user))
         return self._resolve_overlaps(scene, objects)
+
+    def _validate(self, reply: str) -> List[dict]:
+        # Models often wrap JSON in ```json fences; remove them.
+        text = re.sub(r"^```(?:json)?\s*|\s*```$", "", reply.strip())
+        try:
+            data = json.loads(text)
+        except ValueError as error:
+            raise AgentError("The model did not reply with valid JSON") from error
+        if not isinstance(data, list):
+            raise AgentError("The model reply must be a JSON array")
+        if len(data) > self.MAX_OBJECTS:
+            raise AgentError(f"Too many objects (max {self.MAX_OBJECTS})")
+        objects = []
+        for item in data:
+            if not isinstance(item, dict):
+                raise AgentError("Each element must be a JSON object")
+            try:
+                obj = GameObject(**item)
+            except ValidationError as error:
+                raise AgentError("An object has an invalid field or out-of-range value") from error
+            if obj.kind not in GENERATED_KINDS:
+                raise AgentError(f"Unknown kind: {obj.kind!r}")
+            objects.append(obj.model_dump())
+        return objects
