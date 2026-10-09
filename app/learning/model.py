@@ -16,3 +16,23 @@ DEFAULT_WEIGHTS = {
     "spike": 0.5,
     "enemy": 0.6,
 }
+
+
+
+@dataclass
+class LevelModel:
+    """Everything the AI knows about one level, learned from the runs played on it.
+
+    - difficulty: 0 (trivial) to 1 (brutal); drives how many and how nasty obstacles are.
+    - win_rate, coin_ratio, damage, run_seconds: moving averages of what players did.
+    - weights: preference for each obstacle kind.
+    """
+
+    difficulty: float = 0.5
+    runs: int = 0
+    win_rate: float = 0.5
+    coin_ratio: float = 0.5
+    damage: float = 0.0
+    run_seconds: float = 60.0
+    weights: dict = field(default_factory=lambda: dict(DEFAULT_WEIGHTS))
+    version: int = MODEL_VERSION
