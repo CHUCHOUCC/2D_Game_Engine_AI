@@ -54,3 +54,12 @@ def test_every_coin_stays_reachable():
     objects = generate(count=30, difficulty=0.95)
     spawn = (PLAYER["x"], PLAYER["y"])
     assert reachable_coin_ids(SCENE + objects, spawn) == {c["id"] for c in COINS}
+
+
+
+def test_ids_are_unique_and_new():
+    existing = SCENE + [{"id": "ai-wall-1", "kind": "wall", "x": 1500, "y": 900}]
+    objects = generate(scene=existing, count=15)
+    ids = [o["id"] for o in objects]
+    assert len(ids) == len(set(ids))
+    assert "ai-wall-1" not in ids
