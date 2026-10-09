@@ -34,6 +34,7 @@ Every route except `/health` needs `Authorization: Bearer <service token>`.
 | `app/agent.py` | `GameAgent`: builds the prompt, validates the model's reply and fixes overlaps |
 | `app/providers/` | `simulated` (no network) or `openai_compatible` (any `/chat/completions` API) |
 | `app/security.py` | Checks the service token: signature, audience, issuer, expiry and replay |
+| `app/hardening.py` | Security headers, 1 MB body limit and start-up check of the key |
 | `app/main.py`, `app/learning_api.py` | The HTTP routes |
 
 ## How the AI learns
@@ -83,3 +84,4 @@ python -m uvicorn app.main:app --port 8001 --reload
 - Set the environment variables above in the service settings, never in the code.
 - No CORS is enabled on purpose, so browsers cannot call this service.
 - The replay check keeps used token ids in memory; run one instance (or put the ids in a shared store).
+- Set `ENVIRONMENT=production`: the service then refuses to start with a weak or example key and hides `/docs`.
