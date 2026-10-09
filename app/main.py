@@ -26,3 +26,14 @@ def get_agent() -> GameAgent:
 @app.get("/health")
 def health():
     return {"ok": True}
+
+
+
+@app.post("/generate", dependencies=[Depends(require_service_token)])
+def generate(body: GenerateRequest, agent: GameAgent = Depends(get_agent)):
+    try:
+        return {"objects": agent.generate(body.prompt, scene_dicts(body.scene))}
+    except AgentError as error:
+        raise HTTPException(status_code=502, detail=str(error))
+    except AiProviderError as error:
+        raise HTTPException(status_code=502, detail=str(error))
