@@ -26,3 +26,15 @@ def test_missing_or_garbage_token_is_rejected(monkeypatch):
 
 def test_the_raw_key_header_is_not_enough(monkeypatch):
     assert client(monkeypatch).get("/info", headers={"X-Service-Key": KEY}).status_code == 401
+
+
+
+def test_wrong_key_audience_issuer_or_expired_token_is_rejected(monkeypatch):
+    c = client(monkeypatch)
+    for headers in (
+        auth(key="another-key-that-is-also-32-chars-long"),
+        auth(audience="billing"),
+        auth(issuer="someone-else"),
+        auth(lifetime=-120),
+    ):
+        assert c.get("/info", headers=headers).status_code == 401
