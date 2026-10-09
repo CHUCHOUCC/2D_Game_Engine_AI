@@ -67,3 +67,10 @@ class LevelModel:
     def probabilities(self) -> dict:
         total = sum(self.weights.values())
         return {kind: weight / total for kind, weight in self.weights.items()}
+
+
+
+def _number(value, default: float, low: float, high: float) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or value != value:
+        return default
+    return min(high, max(low, float(value)))
