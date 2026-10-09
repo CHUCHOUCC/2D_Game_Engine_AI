@@ -17,3 +17,12 @@ def test_run_summary_rejects_unknown_outcomes_and_negatives():
         run(outcome="draw")
     with pytest.raises(ValidationError):
         run(score=-1)
+
+
+
+def test_features_of_a_run():
+    features = RunFeatures.of(run(coins_collected=2, damage_taken=3, duration_ms=1500))
+    assert features.won == 1.0 and features.quit == 0.0
+    assert features.coin_ratio == 0.5
+    assert features.damage == 3.0
+    assert features.seconds == 1.5
