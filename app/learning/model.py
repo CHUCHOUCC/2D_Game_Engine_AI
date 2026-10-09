@@ -63,3 +63,7 @@ class LevelModel:
         """The AI learns to create more obstacles as players master the level:
         4 at difficulty 0 up to 20 at difficulty 1."""
         return round(4 + 16 * self.difficulty)
+
+    def probabilities(self) -> dict:
+        total = sum(self.weights.values())
+        return {kind: weight / total for kind, weight in self.weights.items()}
