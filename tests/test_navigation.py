@@ -46,3 +46,11 @@ def test_path_length():
     assert path_length(grid, (0, 0), (4, 0)) == 8
     assert path_length(grid, (0, 0), (0, 0)) == 0
     assert path_length(grid, (0, 0), (2, 0)) is None
+
+
+
+def test_reachable_coin_ids():
+    walls = [{"id": f"w{r}", "kind": "wall", "x": 336, "y": r * 32 + 16} for r in range(30)]
+    coins = [{"id": "near", "kind": "coin", "x": 100, "y": 100}, {"id": "far", "kind": "coin", "x": 800, "y": 100}]
+    assert reachable_coin_ids(walls + coins, (50, 50)) == {"near"}
+    assert reachable_coin_ids(coins, (50, 50)) == {"near", "far"}
