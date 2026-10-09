@@ -14,3 +14,19 @@ class AABB:
     cy: float
     half_w: float
     half_h: float
+
+    @property
+    def left(self) -> float:
+        return self.cx - self.half_w
+
+    @property
+    def right(self) -> float:
+        return self.cx + self.half_w
+
+    @property
+    def top(self) -> float:
+        return self.cy - self.half_h
+
+    @property
+    def bottom(self) -> float:
+        return self.cy + self.half_h
