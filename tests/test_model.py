@@ -34,3 +34,10 @@ def test_out_of_range_values_are_clamped():
     assert model.weights["spike"] == 0.05
     assert model.weights["box"] == 10
     assert LevelModel.from_dict({"difficulty": float("nan")}).difficulty == 0.5
+
+
+
+def test_obstacle_budget_grows_with_difficulty():
+    assert LevelModel(difficulty=0.05).obstacle_budget() == 5
+    assert LevelModel(difficulty=0.5).obstacle_budget() == 12
+    assert LevelModel(difficulty=0.95).obstacle_budget() == 19
