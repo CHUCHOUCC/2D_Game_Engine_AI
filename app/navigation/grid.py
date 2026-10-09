@@ -14,3 +14,11 @@ class OccupancyGrid:
         self.rows = rows
         self.tile = tile
         self._blocked = [[False] * cols for _ in range(rows)]
+
+    def cell_of(self, x: float, y: float) -> tuple[int, int]:
+        col = min(self.cols - 1, max(0, int(x // self.tile)))
+        row = min(self.rows - 1, max(0, int(y // self.tile)))
+        return col, row
+
+    def center_of(self, col: int, row: int) -> tuple[float, float]:
+        return (col + 0.5) * self.tile, (row + 0.5) * self.tile
