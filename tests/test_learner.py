@@ -33,3 +33,11 @@ def test_easy_wins_raise_difficulty_and_the_obstacle_budget():
 def test_hard_losses_lower_difficulty():
     model, _ = learn(LevelModel(), HARD_LOSS, times=5)
     assert model.difficulty < 0.5
+
+
+
+def test_difficulty_stays_within_bounds():
+    high, _ = learn(LevelModel(), EASY_WIN, times=200)
+    low, _ = learn(LevelModel(), HARD_LOSS, times=200)
+    assert high.difficulty <= 0.95
+    assert low.difficulty >= 0.05
