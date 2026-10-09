@@ -31,3 +31,12 @@ def test_features_of_a_run():
 
 def test_a_level_without_coins_counts_as_all_coins_taken():
     assert RunFeatures.of(run(coins_collected=0, coins_total=0)).coin_ratio == 1.0
+
+
+
+def test_performance_from_perfect_to_crushed():
+    assert RunFeatures.of(run()).performance() == 1.0
+    crushed = run(outcome="lost", coins_collected=0, damage_taken=9, deaths=3)
+    assert RunFeatures.of(crushed).performance() == 0.0
+    middle = RunFeatures.of(run(outcome="lost", coins_collected=2, damage_taken=0)).performance()
+    assert 0.0 < middle < 1.0
