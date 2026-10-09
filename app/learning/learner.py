@@ -56,3 +56,15 @@ class Learner:
             w["enemy"] *= 1 + rate / 2
         for kind in w:
             w[kind] = round(min(10.0, max(MIN_WEIGHT, w[kind])), 4)
+
+    def learn(self, model: LevelModel, run: RunSummary) -> tuple[LevelModel, float]:
+        """Update the model with a run; returns the new model and the reward it earned."""
+        features = RunFeatures.of(run)
+        performance = features.performance()
+        rate = self.learning_rate(model.runs)
+        self._update_averages(model, features)
+        self._update_difficulty(model, performance, rate)
+        self._update_weights(model, features, rate)
+        model.runs += 1
+        model.difficulty = round(model.difficulty, 4)
+        return model, reward_with_quit_penalty(performance, bool(features.quit))
