@@ -53,3 +53,10 @@ def test_obstacles_without_count_use_the_budget(monkeypatch):
     model = {"difficulty": 0.95}
     body = client(monkeypatch).post("/obstacles", json={"model": model}, headers=auth()).json()
     assert len(body["objects"]) == 19
+
+
+
+def test_obstacles_reject_bad_counts(monkeypatch):
+    c = client(monkeypatch)
+    assert c.post("/obstacles", json={"count": 0}, headers=auth()).status_code == 422
+    assert c.post("/obstacles", json={"count": 31}, headers=auth()).status_code == 422
