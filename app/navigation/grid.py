@@ -36,3 +36,12 @@ class OccupancyGrid:
         for row in range(first_row, last_row + 1):
             for col in range(first_col, last_col + 1):
                 self._blocked[row][col] = True
+
+    @classmethod
+    def from_scene(cls, scene: list, avoid_hazards: bool = False) -> "OccupancyGrid":
+        grid = cls()
+        blocking = SOLID_KINDS | (HAZARD_KINDS - {"enemy"} if avoid_hazards else frozenset())
+        for obj in scene:
+            if obj["kind"] in blocking:
+                grid.block_box(AABB.of_object(obj))
+        return grid
