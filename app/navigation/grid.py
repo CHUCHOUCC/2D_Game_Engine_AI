@@ -45,3 +45,6 @@ class OccupancyGrid:
             if obj["kind"] in blocking:
                 grid.block_box(AABB.of_object(obj))
         return grid
+
+    def free_count(self) -> int:
+        return sum(1 for row in self._blocked for cell in row if not cell)
