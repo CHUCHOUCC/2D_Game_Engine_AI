@@ -23,3 +23,13 @@ class PhysicsWorld:
         for obj in scene:
             world.add(Body.of_object(obj))
         return world
+
+    def _integrate(self, body: Body, dt: float) -> None:
+        if body.static:
+            return
+        body.box = body.box.moved(body.vx * dt, body.vy * dt)
+        # Linear drag like Arcade Physics: speed drops by drag units per second.
+        for axis in ("vx", "vy"):
+            speed = getattr(body, axis)
+            slowed = max(0.0, abs(speed) - body.drag * dt)
+            setattr(body, axis, slowed if speed >= 0 else -slowed)
