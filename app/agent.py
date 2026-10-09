@@ -56,3 +56,9 @@ class GameAgent:
 
     def __init__(self, provider: AiProvider):
         self._provider = provider
+
+    def generate(self, request: str, scene: list | None = None) -> List[dict]:
+        scene = scene or []
+        user = f"{describe_scene(scene)}\nRequest: {request}"
+        objects = self._validate(self._provider.complete(SYSTEM_PROMPT, user))
+        return self._resolve_overlaps(scene, objects)
