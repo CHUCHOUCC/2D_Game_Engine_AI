@@ -77,3 +77,12 @@ def test_factory_reports_missing_settings(monkeypatch):
     monkeypatch.delenv("AI_MODEL", raising=False)
     with pytest.raises(AiProviderError, match="AI_API_KEY, AI_MODEL"):
         create_provider()
+
+
+
+def test_network_failure_becomes_provider_error():
+    def handler(request):
+        raise httpx.ConnectError("unreachable")
+
+    with pytest.raises(AiProviderError):
+        provider_with(handler).complete("s", "u")
