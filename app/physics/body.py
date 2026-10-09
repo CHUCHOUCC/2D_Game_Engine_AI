@@ -31,3 +31,8 @@ class Body:
     vx: float = 0.0
     vy: float = 0.0
     touching: set = field(default_factory=set)
+
+    @classmethod
+    def of_object(cls, obj: dict) -> "Body":
+        static, mass, drag, bounce = KIND_PHYSICS.get(obj["kind"], (True, 1.0, 0.0, 0.0))
+        return cls(str(obj["id"]), obj["kind"], AABB.of_object(obj), static, mass, drag, bounce)
