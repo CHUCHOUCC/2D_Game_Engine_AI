@@ -12,3 +12,12 @@ def test_velocity_moves_a_dynamic_body_and_drag_slows_it():
     world.step(0.1)
     assert crate.box.cx == 120
     assert crate.vx == 160  # 200 - drag 400 * 0.1
+
+
+
+def test_static_bodies_ignore_velocity():
+    world = PhysicsWorld()
+    wall = world.add(Body.of_object(obj("w", "wall", 100, 100)))
+    wall.vx = 500
+    world.step(1)
+    assert wall.box.cx == 100
