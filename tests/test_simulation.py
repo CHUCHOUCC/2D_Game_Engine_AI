@@ -59,3 +59,9 @@ def test_lighter_body_moves_more_when_two_dynamic_bodies_collide():
     moved_crate = 100 - crate.box.cx
     moved_enemy = enemy.box.cx - 120
     assert moved_enemy > moved_crate > 0
+
+
+
+def test_coins_do_not_collide():
+    world = PhysicsWorld.from_scene([obj("c", "coin", 100, 100), obj("b", "box", 100, 100)])
+    assert world.step(0) == 0
