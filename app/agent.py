@@ -86,3 +86,23 @@ class GameAgent:
                 raise AgentError(f"Unknown kind: {obj.kind!r}")
             objects.append(obj.model_dump())
         return objects
+
+    @staticmethod
+    def _resolve_overlaps(scene: list, objects: List[dict]) -> List[dict]:
+        """Existing objects stay put (static); new solid objects are separated
+        from them and from each other, then kept inside the world."""
+        world = PhysicsWorld()
+        for obj in scene:
+            body = Body.of_object(obj)
+            body.static = True
+            world.add(body)
+        new_bodies = []
+        for i, obj in enumerate(objects):
+            body = Body.of_object({**obj, "id": f"__new{i}"})
+            body.static = False
+            new_bodies.append(world.add(body))
+        world.settle()
+        return [
+            {**obj, "x": round(body.box.cx, 1), "y": round(body.box.cy, 1)}
+            for obj, body in zip(objects, new_bodies)
+        ]
