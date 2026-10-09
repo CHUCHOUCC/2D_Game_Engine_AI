@@ -47,3 +47,10 @@ class ObstacleGenerator:
             if roll <= 0:
                 return kind
         return next(reversed(probabilities))
+
+    @staticmethod
+    def spawn_of(scene: list) -> tuple[float, float]:
+        player = next((obj for obj in scene if obj["kind"] == "player"), None)
+        if player is not None:
+            return float(player["x"]), float(player["y"])
+        return 2 * TILE_SIZE, WORLD_HEIGHT / 2
