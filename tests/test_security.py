@@ -38,3 +38,13 @@ def test_wrong_key_audience_issuer_or_expired_token_is_rejected(monkeypatch):
         auth(lifetime=-120),
     ):
         assert c.get("/info", headers=headers).status_code == 401
+
+
+
+def test_a_token_cannot_be_used_twice(monkeypatch):
+    c = client(monkeypatch)
+    headers = auth(jti="replay-me")
+    assert c.get("/info", headers=headers).status_code == 200
+    response = c.get("/info", headers=headers)
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Service token already used"
