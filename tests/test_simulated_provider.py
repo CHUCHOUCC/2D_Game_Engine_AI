@@ -38,3 +38,9 @@ def test_position_after_en_or_at():
 
 def test_unknown_request_gives_one_box_in_the_middle():
     assert ask("algo bonito") == [{"id": "box-1", "kind": "box", "x": 800.0, "y": 480.0}]
+
+
+
+def test_ids_are_unique():
+    ids = [o["id"] for o in ask("3 monedas y 2 cajas")]
+    assert len(ids) == len(set(ids)) == 5
