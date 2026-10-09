@@ -63,3 +63,14 @@ def test_first_run_sets_the_averages_and_later_runs_blend():
     assert model.win_rate == 1.0
     model, _ = learn(model, HARD_LOSS)
     assert 0 < model.win_rate < 1.0
+
+
+
+def test_rewards_improve_while_the_model_adapts_to_a_strong_player():
+    model, rewards = learn(LevelModel(), EASY_WIN, times=1)
+    first = rewards[0]
+    # A stronger level makes the same player perform closer to the target.
+    model.difficulty = 0.9
+    tougher = dict(EASY_WIN, coins_collected=4, damage_taken=2)
+    _, later = learn(model, tougher)
+    assert later[0] > first
