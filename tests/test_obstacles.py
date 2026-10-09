@@ -99,3 +99,10 @@ def test_count_is_capped_and_zero_gives_nothing():
 
 def test_scene_without_player_uses_the_left_middle_as_spawn():
     assert ObstacleGenerator.spawn_of(COINS) == (64, 480)
+
+
+
+def test_open_area_ratio_shrinks_with_walls():
+    assert open_area_ratio([]) == 1.0
+    walls = [{"id": f"w{r}", "kind": "wall", "x": 816, "y": r * 32 + 16} for r in range(30)]
+    assert 0.45 < open_area_ratio(walls) < 0.55
