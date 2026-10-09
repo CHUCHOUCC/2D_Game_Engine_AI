@@ -68,3 +68,15 @@ class PhysicsWorld:
         a.touching.add(b.id)
         b.touching.add(a.id)
         return True
+
+    def step(self, dt: float = 1 / 60) -> int:
+        """Advance the world by dt seconds; returns how many contacts were resolved."""
+        for body in self.bodies:
+            body.touching.clear()
+            self._integrate(body, dt)
+            self._clamp_to_world(body)
+        contacts = 0
+        for i, a in enumerate(self.bodies):
+            for b in self.bodies[i + 1:]:
+                contacts += self._separate(a, b)
+        return contacts
