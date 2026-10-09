@@ -86,3 +86,34 @@ class ObstacleGenerator:
         if obj["kind"] not in SOLID_KINDS or not reachable:
             return True
         return reachable <= reachable_coin_ids(scene + [obj], spawn)
+
+    def generate(self, scene: list, count: int | None = None) -> list:
+        """New obstacles for the scene (the scene itself is not changed)."""
+        count = self._model.obstacle_budget() if count is None else max(0, min(count, MAX_COUNT))
+        rng = self._rng_for(scene, count)
+        spawn = self.spawn_of(scene)
+        coins = [obj for obj in scene if obj["kind"] == "coin"]
+        reachable = reachable_coin_ids(scene, spawn)
+        boxes = [AABB.of_object(obj) for obj in scene]
+        used_ids = {str(obj["id"]) for obj in scene}
+        working = list(scene)
+        created = []
+        for _ in range(count):
+            kind = self._pick_kind(rng)
+            options = []
+            for _ in range(CANDIDATES_PER_OBJECT):
+                x, y = self._candidate(rng, kind)
+                candidate = {"id": "", "kind": kind, "x": x, "y": y}
+                if self._fits(candidate, boxes, spawn):
+                    options.append((self._score(rng, x, y, coins), candidate))
+            options.sort(key=lambda option: -option[0])
+            # The best few that do not cut a coin off; checking all would be slow.
+            obj = next((c for _, c in options[:5] if self._keeps_coins(working, c, spawn, reachable)), None)
+            if obj is None:
+                continue
+            obj["id"] = _new_id(kind, used_ids)
+            used_ids.add(obj["id"])
+            boxes.append(AABB.of_object(obj))
+            working.append(obj)
+            created.append(obj)
+        return created
