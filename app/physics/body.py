@@ -41,3 +41,6 @@ class Body:
     def solid(self) -> bool:
         """Coins and spikes overlap the player instead of stopping it."""
         return self.kind not in ("coin", "spike")
+
+    def to_object(self) -> dict:
+        return {"id": self.id, "kind": self.kind, "x": round(self.box.cx, 1), "y": round(self.box.cy, 1)}
