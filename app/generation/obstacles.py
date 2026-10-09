@@ -38,3 +38,12 @@ class ObstacleGenerator:
             return random.Random(self._seed)
         key = json.dumps([scene, count, self._model.to_dict()], sort_keys=True, default=str)
         return random.Random(int(hashlib.sha256(key.encode()).hexdigest()[:16], 16))
+
+    def _pick_kind(self, rng: random.Random) -> str:
+        probabilities = self._model.probabilities()
+        roll = rng.random()
+        for kind, probability in probabilities.items():
+            roll -= probability
+            if roll <= 0:
+                return kind
+        return next(reversed(probabilities))
