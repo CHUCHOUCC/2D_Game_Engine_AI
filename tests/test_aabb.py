@@ -16,3 +16,10 @@ def test_of_object_uses_the_kind_size():
     assert (house.half_w, house.half_h) == (48, 48)
     unknown = AABB.of_object({"id": "u", "kind": "ufo", "x": 0, "y": 0})
     assert unknown.half_w == 16
+
+
+
+def test_overlap_and_touching_edges():
+    assert box(0, 0).overlaps(box(31, 0))
+    assert not box(0, 0).overlaps(box(32, 0))  # edges touch, no overlap
+    assert box(0, 0).overlaps(box(34, 0), padding=4)
