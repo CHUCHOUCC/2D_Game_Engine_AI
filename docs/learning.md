@@ -14,3 +14,14 @@ The service keeps no state. The backend stores one **level model** per project
 
 Anything missing or out of range in that JSON falls back to these defaults, so a corrupted
 row can never break the service.
+
+## Performance and reward
+
+```
+performance = 0.5 · won + 0.3 · coins_collected / coins_total + 0.2 · (1 − min(damage / 5, 1))
+              − 0.1 · min(deaths, 3)                      (kept between 0 and 1)
+
+reward = 1 − |performance − 0.65| / 0.65                  (halved if the player quit)
+```
+
+A perfect run (performance 1.0) only earns 0.46: the AI prefers levels that challenge the player.
