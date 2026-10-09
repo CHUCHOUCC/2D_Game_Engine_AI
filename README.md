@@ -48,3 +48,11 @@ deaths). The AI is rewarded when that score lands near **0.65**: hard but fair.
 
 The step size shrinks as runs pile up (0.3 / √(runs + 1), at least 0.05). Details and the
 exact numbers are in [docs/learning.md](docs/learning.md).
+
+## Physics rules the generator follows
+
+- Every obstacle is inside the world and does not overlap anything (AABB with a 4 px gap).
+- Nothing within 128 px of the player's spawn point, and no enemy within 256 px.
+- A solid obstacle (box, wall, house, tree) is rejected if it cuts off a coin the player could reach.
+- Objects asked for with `/generate` are pushed out of what already exists, like Arcade Physics would.
+- Same scene and same model give the same obstacles, so results are repeatable.
