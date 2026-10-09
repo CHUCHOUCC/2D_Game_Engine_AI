@@ -46,3 +46,10 @@ def test_obstacles_endpoint(monkeypatch):
     assert len(body["objects"]) == 6
     assert body["difficulty"] == 0.5
     assert 0 < body["open_area"] <= 1
+
+
+
+def test_obstacles_without_count_use_the_budget(monkeypatch):
+    model = {"difficulty": 0.95}
+    body = client(monkeypatch).post("/obstacles", json={"model": model}, headers=auth()).json()
+    assert len(body["objects"]) == 19
