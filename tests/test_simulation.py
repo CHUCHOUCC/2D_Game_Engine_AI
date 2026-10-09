@@ -1,0 +1,14 @@
+from app.physics import Body, PhysicsWorld
+
+
+def obj(id, kind, x, y):
+    return {"id": id, "kind": kind, "x": x, "y": y}
+
+
+def test_velocity_moves_a_dynamic_body_and_drag_slows_it():
+    world = PhysicsWorld()
+    crate = world.add(Body.of_object(obj("b", "box", 100, 100)))
+    crate.vx = 200
+    world.step(0.1)
+    assert crate.box.cx == 120
+    assert crate.vx == 160  # 200 - drag 400 * 0.1
