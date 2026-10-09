@@ -27,3 +27,17 @@ class GameObject(BaseModel):
     kind: str
     x: float = Field(ge=0, le=WORLD_WIDTH)
     y: float = Field(ge=0, le=WORLD_HEIGHT)
+
+
+
+def describe_scene(scene: list) -> str:
+    """A short summary so the model can place objects around what exists."""
+    if not scene:
+        return "The scene is empty."
+    counts = {}
+    for obj in scene:
+        counts[obj.get("kind", "?")] = counts.get(obj.get("kind", "?"), 0) + 1
+    parts = ", ".join(f"{n} {kind}" for kind, n in sorted(counts.items()))
+    player = next((o for o in scene if o.get("kind") == "player"), None)
+    where = f" The player starts at ({player['x']:.0f}, {player['y']:.0f})." if player else ""
+    return f"The scene already has: {parts}.{where} Do not place objects on top of them."
