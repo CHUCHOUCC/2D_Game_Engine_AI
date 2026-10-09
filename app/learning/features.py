@@ -28,3 +28,16 @@ class RunFeatures:
     deaths: float
     seconds: float
     kills: float
+
+    @classmethod
+    def of(cls, run: RunSummary) -> "RunFeatures":
+        coin_ratio = run.coins_collected / run.coins_total if run.coins_total else 1.0
+        return cls(
+            won=1.0 if run.outcome == "won" else 0.0,
+            quit=1.0 if run.outcome == "quit" else 0.0,
+            coin_ratio=min(1.0, coin_ratio),
+            damage=float(run.damage_taken),
+            deaths=float(run.deaths),
+            seconds=run.duration_ms / 1000,
+            kills=float(run.enemies_defeated),
+        )
