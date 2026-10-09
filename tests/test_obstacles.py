@@ -69,3 +69,12 @@ def test_ids_are_unique_and_new():
 def test_same_scene_and_model_give_the_same_obstacles():
     assert generate(count=8) == generate(count=8)
     assert generate(count=8) != generate(count=8, difficulty=0.9)
+
+
+
+def test_weights_decide_which_kinds_appear():
+    weights = {kind: 0.05 for kind in OBSTACLE_KINDS}
+    weights["spike"] = 10
+    objects = ObstacleGenerator(LevelModel(weights=weights)).generate(SCENE, 20)
+    spikes = sum(1 for o in objects if o["kind"] == "spike")
+    assert spikes >= 15
