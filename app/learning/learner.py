@@ -26,3 +26,8 @@ class Learner:
         model.coin_ratio += a * (features.coin_ratio - model.coin_ratio)
         model.damage += a * (features.damage - model.damage)
         model.run_seconds += a * (features.seconds - model.run_seconds)
+
+    def _update_difficulty(self, model: LevelModel, performance: float, rate: float) -> None:
+        # Played well -> harder; struggled -> easier.
+        change = 2 * rate * (performance - TARGET_PERFORMANCE)
+        model.difficulty = min(MAX_DIFFICULTY, max(MIN_DIFFICULTY, model.difficulty + change))
