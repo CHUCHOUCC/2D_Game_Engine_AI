@@ -88,3 +88,9 @@ def test_higher_difficulty_places_obstacles_closer_to_coins():
     easy = mean_distance(generate(count=15, difficulty=0.05))
     hard = mean_distance(generate(count=15, difficulty=0.95))
     assert hard < easy
+
+
+
+def test_count_is_capped_and_zero_gives_nothing():
+    assert len(generate(count=500)) <= 30
+    assert generate(count=0) == []
