@@ -54,3 +54,12 @@ class ObstacleGenerator:
         if player is not None:
             return float(player["x"]), float(player["y"])
         return 2 * TILE_SIZE, WORLD_HEIGHT / 2
+
+    @staticmethod
+    def _candidate(rng: random.Random, kind: str) -> tuple[float, float]:
+        tiles = 3 if kind == "house" else 1
+        cols = WORLD_WIDTH // TILE_SIZE - tiles
+        rows = WORLD_HEIGHT // TILE_SIZE - tiles
+        col = rng.randint(0, cols)
+        row = rng.randint(0, rows)
+        return (col + tiles / 2) * TILE_SIZE, (row + tiles / 2) * TILE_SIZE
