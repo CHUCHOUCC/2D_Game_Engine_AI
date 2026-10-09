@@ -81,3 +81,18 @@ def test_too_many_objects_are_rejected():
     reply = json.dumps([{"id": str(i), "kind": "box", "x": 100, "y": 100} for i in range(31)])
     with pytest.raises(AgentError, match="Too many"):
         agent_replying(reply).generate("x")
+
+
+
+def test_the_scene_is_described_in_the_prompt():
+    provider = ScriptedProvider("[]")
+    scene = [{"id": "p", "kind": "player", "x": 64, "y": 480}, {"id": "w", "kind": "wall", "x": 300, "y": 300}]
+    GameAgent(provider).generate("a coin", scene)
+    user = provider.prompts[0][1]
+    assert "1 player, 1 wall" in user
+    assert "(64, 480)" in user
+    assert user.endswith("Request: a coin")
+
+
+def test_describe_empty_scene():
+    assert describe_scene([]) == "The scene is empty."
