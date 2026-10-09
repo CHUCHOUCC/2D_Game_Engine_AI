@@ -54,3 +54,11 @@ def test_a_token_cannot_be_used_twice(monkeypatch):
 def test_short_or_missing_key_returns_503(monkeypatch):
     assert client(monkeypatch, key="").get("/info", headers=auth()).status_code == 503
     assert client(monkeypatch, key="short").get("/info", headers=auth()).status_code == 503
+
+
+
+def test_replay_cache_forgets_expired_ids():
+    cache = ReplayCache()
+    assert cache.first_use("a", time.time() - 1)
+    assert cache.first_use("a", time.time() + 60)  # the old entry expired
+    assert not cache.first_use("a", time.time() + 60)
