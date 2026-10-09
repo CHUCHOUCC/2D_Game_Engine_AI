@@ -49,3 +49,13 @@ def test_dynamic_body_is_pushed_out_of_a_static_one():
     assert world.body("w").box.cx == 100
     assert world.body("b").box.left == world.body("w").box.right
     assert "w" in world.body("b").touching
+
+
+
+def test_lighter_body_moves_more_when_two_dynamic_bodies_collide():
+    world = PhysicsWorld.from_scene([obj("b", "box", 100, 100), obj("e", "enemy", 120, 100)])
+    world.step(0)
+    crate, enemy = world.body("b"), world.body("e")
+    moved_crate = 100 - crate.box.cx
+    moved_enemy = enemy.box.cx - 120
+    assert moved_enemy > moved_crate > 0
