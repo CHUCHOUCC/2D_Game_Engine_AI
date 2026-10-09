@@ -70,3 +70,13 @@ def test_misconfigured_real_provider_returns_503(monkeypatch):
     response = TestClient(app).post("/generate", json={"prompt": "x"}, headers=auth())
     assert response.status_code == 503
     assert "AI_API_KEY" in response.json()["detail"]
+
+
+
+def test_service_does_not_enable_cors(monkeypatch):
+    client = client_with(SimulatedProvider(), monkeypatch)
+    response = client.options(
+        "/generate",
+        headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"},
+    )
+    assert "access-control-allow-origin" not in response.headers
