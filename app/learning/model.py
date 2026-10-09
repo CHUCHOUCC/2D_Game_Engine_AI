@@ -58,3 +58,8 @@ class LevelModel:
             for kind in OBSTACLE_KINDS:
                 model.weights[kind] = _number(weights.get(kind), model.weights[kind], MIN_WEIGHT, 10)
         return model
+
+    def obstacle_budget(self) -> int:
+        """The AI learns to create more obstacles as players master the level:
+        4 at difficulty 0 up to 20 at difficulty 1."""
+        return round(4 + 16 * self.difficulty)
