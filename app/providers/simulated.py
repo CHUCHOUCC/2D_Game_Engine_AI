@@ -22,3 +22,14 @@ _NUMBER_WORDS = {
     "cinco": 5, "five": 5, "seis": 6, "six": 6, "diez": 10, "ten": 10,
 }
 MAX_PER_KIND = 10
+
+
+
+def _parts(text: str) -> list:
+    """'3 coins and a wall at 400 300' -> ['3 coins', 'a wall at 400 300']."""
+    # A comma followed by a number belongs to a position like "(90, 70)".
+    return [p.strip() for p in re.split(r",(?!\s*\d)|;|\by\b|\band\b", text) if p.strip()]
+
+
+def _kind_of(part: str):
+    return next((name for name, words in _KINDS if any(w in part for w in words)), None)
