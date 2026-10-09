@@ -21,3 +21,12 @@ def test_static_bodies_ignore_velocity():
     wall.vx = 500
     world.step(1)
     assert wall.box.cx == 100
+
+
+
+def test_drag_stops_but_never_reverses():
+    world = PhysicsWorld()
+    crate = world.add(Body.of_object(obj("b", "box", 100, 100)))
+    crate.vx, crate.vy = 10, -10
+    world.step(1)
+    assert (crate.vx, crate.vy) == (0, 0)
