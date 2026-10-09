@@ -87,3 +87,6 @@ class PhysicsWorld:
             if self.step(0.0) == 0:
                 return steps
         return max_steps
+
+    def body(self, body_id: str) -> Body | None:
+        return next((b for b in self.bodies if b.id == body_id), None)
