@@ -80,3 +80,9 @@ class ObstacleGenerator:
         if math.dist((obj["x"], obj["y"]), spawn) < safe:
             return False
         return not any(box.overlaps(other, PADDING) for other in boxes)
+
+    @staticmethod
+    def _keeps_coins(scene: list, obj: dict, spawn: tuple[float, float], reachable: set) -> bool:
+        if obj["kind"] not in SOLID_KINDS or not reachable:
+            return True
+        return reachable <= reachable_coin_ids(scene + [obj], spawn)
