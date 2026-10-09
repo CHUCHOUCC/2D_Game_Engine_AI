@@ -75,3 +75,11 @@ python -m uvicorn app.main:app --port 8001 --reload
 | `AI_SERVICE_KEY` | Shared secret (32+ characters). The backend signs a 60-second JWT with it for every call. |
 | `AI_PROVIDER` | `simulated` (default) or `openai_compatible` |
 | `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` | Only for `openai_compatible`; a missing one gives a clear 503 |
+
+## Deployment (Render)
+
+- Build command: `pip install -r requirements.txt`
+- Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Set the environment variables above in the service settings, never in the code.
+- No CORS is enabled on purpose, so browsers cannot call this service.
+- The replay check keeps used token ids in memory; run one instance (or put the ids in a shared store).
