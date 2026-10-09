@@ -117,3 +117,11 @@ class ObstacleGenerator:
             working.append(obj)
             created.append(obj)
         return created
+
+
+
+def _new_id(kind: str, used: set) -> str:
+    n = 1
+    while f"ai-{kind}-{n}" in used:
+        n += 1
+    return f"ai-{kind}-{n}"
