@@ -13,3 +13,10 @@ def test_every_kind_has_physics():
     from app.world import ALL_KINDS
 
     assert set(KIND_PHYSICS) == set(ALL_KINDS)
+
+
+
+def test_coins_and_spikes_do_not_block():
+    assert not Body.of_object({"id": "c", "kind": "coin", "x": 0, "y": 0}).solid
+    assert not Body.of_object({"id": "s", "kind": "spike", "x": 0, "y": 0}).solid
+    assert Body.of_object({"id": "e", "kind": "enemy", "x": 0, "y": 0}).solid
