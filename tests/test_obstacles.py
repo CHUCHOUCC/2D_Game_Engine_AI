@@ -78,3 +78,13 @@ def test_weights_decide_which_kinds_appear():
     objects = ObstacleGenerator(LevelModel(weights=weights)).generate(SCENE, 20)
     spikes = sum(1 for o in objects if o["kind"] == "spike")
     assert spikes >= 15
+
+
+
+def test_higher_difficulty_places_obstacles_closer_to_coins():
+    def mean_distance(objects):
+        return sum(min(math.dist((o["x"], o["y"]), (c["x"], c["y"])) for c in COINS) for o in objects) / len(objects)
+
+    easy = mean_distance(generate(count=15, difficulty=0.05))
+    hard = mean_distance(generate(count=15, difficulty=0.95))
+    assert hard < easy
