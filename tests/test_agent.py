@@ -66,3 +66,11 @@ def test_out_of_range_position_is_rejected():
         agent_replying(reply).generate("x")
     inside = json.dumps([{"id": "a", "kind": "box", "x": 1500, "y": 900}])
     assert agent_replying(inside).generate("x")
+
+
+
+def test_missing_field_and_non_objects_are_rejected():
+    with pytest.raises(AgentError):
+        agent_replying(json.dumps([{"id": "a", "kind": "box", "x": 1}])).generate("x")
+    with pytest.raises(AgentError, match="JSON object"):
+        agent_replying("[1, 2]").generate("x")
