@@ -52,3 +52,34 @@ def _position_of(part: str):
     if match:
         return min(int(match.group(1)), WORLD_WIDTH), min(int(match.group(2)), WORLD_HEIGHT)
     return None
+
+
+
+class SimulatedProvider(AiProvider):
+    """Deterministic stand-in for a real model, for demos and tests (no network, no key).
+
+    It understands requests like "3 monedas y una pared en 400 300": one kind per
+    part, an optional count and an optional position. Without a position the
+    objects are laid out in a row in the middle of the world.
+    """
+
+    def complete(self, system: str, user: str) -> str:
+        request = user.split("Request:", 1)[-1].lower()
+        objects = []
+        for part in _parts(request) or [request]:
+            kind = _kind_of(part)
+            if kind is None:
+                continue
+            word_at = min(part.find(w) for w in dict(_KINDS)[kind] if w in part)
+            count = _count_of(part, word_at)
+            position = _position_of(part)
+            for i in range(count):
+                if position:
+                    x, y = position[0] + 40 * i, position[1]
+                else:
+                    x, y = WORLD_WIDTH / 2 - 40 * (count - 1) / 2 + 40 * i, WORLD_HEIGHT / 2
+                objects.append({"id": f"{kind}-{len(objects) + 1}", "kind": kind,
+                                "x": min(x, WORLD_WIDTH), "y": y})
+        if not objects:
+            objects.append({"id": "box-1", "kind": "box", "x": WORLD_WIDTH / 2, "y": WORLD_HEIGHT / 2})
+        return json.dumps(objects)
