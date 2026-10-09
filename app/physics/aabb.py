@@ -57,3 +57,9 @@ class AABB:
         if overlap_x < overlap_y:
             return (-overlap_x if dx > 0 else overlap_x, 0.0)
         return (0.0, -overlap_y if dy > 0 else overlap_y)
+
+    def moved(self, dx: float, dy: float) -> "AABB":
+        return AABB(self.cx + dx, self.cy + dy, self.half_w, self.half_h)
+
+    def inside(self, width: float, height: float) -> bool:
+        return self.left >= 0 and self.top >= 0 and self.right <= width and self.bottom <= height
