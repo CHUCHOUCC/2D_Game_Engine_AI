@@ -71,3 +71,12 @@ class ObstacleGenerator:
         closeness = 1.0 - min(nearest / 600.0, 1.0)
         d = self._model.difficulty
         return d * closeness + (1 - d) * rng.random()
+
+    def _fits(self, obj: dict, boxes: list, spawn: tuple[float, float]) -> bool:
+        box = AABB.of_object(obj)
+        if not box.inside(WORLD_WIDTH, WORLD_HEIGHT):
+            return False
+        safe = ENEMY_SAFE_RADIUS if obj["kind"] == "enemy" else SPAWN_SAFE_RADIUS
+        if math.dist((obj["x"], obj["y"]), spawn) < safe:
+            return False
+        return not any(box.overlaps(other, PADDING) for other in boxes)
