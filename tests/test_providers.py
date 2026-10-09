@@ -67,3 +67,13 @@ def test_factory_builds_the_real_provider_from_environment(monkeypatch):
 def test_factory_rejects_unknown_provider():
     with pytest.raises(ValueError):
         create_provider("nope")
+
+
+
+def test_factory_reports_missing_settings(monkeypatch):
+    monkeypatch.setenv("AI_PROVIDER", "openai_compatible")
+    monkeypatch.setenv("AI_BASE_URL", "https://api.example.com/v1")
+    monkeypatch.delenv("AI_API_KEY", raising=False)
+    monkeypatch.delenv("AI_MODEL", raising=False)
+    with pytest.raises(AiProviderError, match="AI_API_KEY, AI_MODEL"):
+        create_provider()
