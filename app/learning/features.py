@@ -14,3 +14,17 @@ class RunSummary(BaseModel):
     damage_taken: int = Field(ge=0)
     deaths: int = Field(ge=0)
     duration_ms: int = Field(ge=0)
+
+
+
+@dataclass(frozen=True)
+class RunFeatures:
+    """A run reduced to numbers between 0 and 1 (except seconds and damage)."""
+
+    won: float
+    quit: float
+    coin_ratio: float
+    damage: float
+    deaths: float
+    seconds: float
+    kills: float
