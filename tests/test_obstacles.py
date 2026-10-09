@@ -94,3 +94,8 @@ def test_higher_difficulty_places_obstacles_closer_to_coins():
 def test_count_is_capped_and_zero_gives_nothing():
     assert len(generate(count=500)) <= 30
     assert generate(count=0) == []
+
+
+
+def test_scene_without_player_uses_the_left_middle_as_spawn():
+    assert ObstacleGenerator.spawn_of(COINS) == (64, 480)
