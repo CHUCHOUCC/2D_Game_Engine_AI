@@ -29,3 +29,22 @@ def learn(body: LearnRequest):
         "difficulty": model.difficulty,
         "obstacle_budget": model.obstacle_budget(),
     }
+
+
+
+class ObstacleRequest(BaseModel):
+    model: dict = Field(default_factory=dict)
+    scene: List[SceneObject] = Field(default_factory=list, max_length=MAX_SCENE_OBJECTS)
+    count: int | None = Field(default=None, ge=1, le=30)
+
+
+@router.post("/obstacles")
+def obstacles(body: ObstacleRequest):
+    model = LevelModel.from_dict(body.model)
+    scene = scene_dicts(body.scene)
+    objects = ObstacleGenerator(model).generate(scene, body.count)
+    return {
+        "objects": objects,
+        "difficulty": model.difficulty,
+        "open_area": round(open_area_ratio(scene + objects), 4),
+    }
