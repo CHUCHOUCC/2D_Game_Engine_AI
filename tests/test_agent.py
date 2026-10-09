@@ -96,3 +96,20 @@ def test_the_scene_is_described_in_the_prompt():
 
 def test_describe_empty_scene():
     assert describe_scene([]) == "The scene is empty."
+
+
+
+def test_new_objects_are_pushed_out_of_existing_solids():
+    scene = [{"id": "w", "kind": "wall", "x": 500, "y": 500}]
+    reply = json.dumps([{"id": "b", "kind": "box", "x": 505, "y": 500}])
+    placed = agent_replying(reply).generate("x", scene)[0]
+    assert not AABB.of_object(placed).overlaps(AABB.of_object(scene[0]))
+    assert placed["y"] == 500
+
+
+def test_new_objects_do_not_overlap_each_other():
+    reply = json.dumps([{"id": str(i), "kind": "wall", "x": 800, "y": 480} for i in range(4)])
+    boxes = [AABB.of_object(o) for o in agent_replying(reply).generate("x")]
+    for i, a in enumerate(boxes):
+        for b in boxes[i + 1:]:
+            assert not a.overlaps(b)
