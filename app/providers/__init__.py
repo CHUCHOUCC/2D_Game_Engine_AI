@@ -6,6 +6,8 @@ from .simulated import SimulatedProvider
 
 __all__ = ["AiProvider", "AiProviderError", "OpenAiCompatibleProvider", "SimulatedProvider", "create_provider"]
 
+_REAL_PROVIDER_SETTINGS = ("AI_BASE_URL", "AI_API_KEY", "AI_MODEL")
+
 
 def create_provider(name: str = None) -> AiProvider:
     """Build the provider chosen by AI_PROVIDER ('simulated' by default)."""
@@ -13,6 +15,9 @@ def create_provider(name: str = None) -> AiProvider:
     if name == "simulated":
         return SimulatedProvider()
     if name == "openai_compatible":
+        missing = [key for key in _REAL_PROVIDER_SETTINGS if not os.environ.get(key)]
+        if missing:
+            raise AiProviderError(f"Missing settings for openai_compatible: {', '.join(missing)}")
         return OpenAiCompatibleProvider(
             base_url=os.environ["AI_BASE_URL"],
             api_key=os.environ["AI_API_KEY"],
