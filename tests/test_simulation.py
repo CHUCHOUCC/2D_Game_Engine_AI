@@ -65,3 +65,14 @@ def test_lighter_body_moves_more_when_two_dynamic_bodies_collide():
 def test_coins_do_not_collide():
     world = PhysicsWorld.from_scene([obj("c", "coin", 100, 100), obj("b", "box", 100, 100)])
     assert world.step(0) == 0
+
+
+
+def test_settle_separates_a_pile_of_boxes():
+    scene = [obj(f"b{i}", "box", 400 + i, 300) for i in range(5)]
+    world = PhysicsWorld.from_scene(scene)
+    world.settle(60)
+    boxes = [b.box for b in world.bodies]
+    for i, a in enumerate(boxes):
+        for b in boxes[i + 1:]:
+            assert not a.overlaps(b)
