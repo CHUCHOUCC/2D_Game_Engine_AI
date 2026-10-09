@@ -125,3 +125,12 @@ def _new_id(kind: str, used: set) -> str:
     while f"ai-{kind}-{n}" in used:
         n += 1
     return f"ai-{kind}-{n}"
+
+
+
+def open_area_ratio(scene: list) -> float:
+    """Share of the world the player can walk to from the spawn point (0..1)."""
+    grid = OccupancyGrid.from_scene(scene)
+    spawn = ObstacleGenerator.spawn_of(scene)
+    total = grid.cols * grid.rows
+    return len(reachable_cells(grid, grid.cell_of(*spawn))) / total
