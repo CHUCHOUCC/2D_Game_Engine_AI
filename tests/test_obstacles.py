@@ -19,3 +19,9 @@ def test_generates_the_requested_number_of_obstacles():
     objects = generate(count=10)
     assert len(objects) == 10
     assert all(obj["kind"] in OBSTACLE_KINDS for obj in objects)
+
+
+
+def test_default_count_is_the_model_budget():
+    model = LevelModel(difficulty=0.95)
+    assert len(ObstacleGenerator(model).generate(SCENE)) == model.obstacle_budget()
