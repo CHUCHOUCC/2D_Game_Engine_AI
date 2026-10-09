@@ -28,3 +28,8 @@ HAZARD_KINDS = frozenset({"spike", "enemy"})
 COLLECTIBLE_KINDS = frozenset({"coin"})
 # Kinds the generator treats as obstacles (everything but coins).
 OBSTACLE_KINDS = tuple(kind for kind in GENERATED_KINDS if kind not in COLLECTIBLE_KINDS)
+
+
+
+def inside_world(x: float, y: float) -> bool:
+    return 0 <= x <= WORLD_WIDTH and 0 <= y <= WORLD_HEIGHT
