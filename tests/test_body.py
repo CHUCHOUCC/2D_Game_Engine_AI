@@ -6,3 +6,10 @@ def test_walls_are_static_and_boxes_dynamic():
     crate = Body.of_object({"id": "b", "kind": "box", "x": 10, "y": 10})
     assert wall.static and not crate.static
     assert crate.mass == 2.0 and crate.drag == 400.0
+
+
+
+def test_every_kind_has_physics():
+    from app.world import ALL_KINDS
+
+    assert set(KIND_PHYSICS) == set(ALL_KINDS)
