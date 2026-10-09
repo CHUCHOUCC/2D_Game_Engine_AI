@@ -23,3 +23,10 @@ def test_overlap_and_touching_edges():
     assert box(0, 0).overlaps(box(31, 0))
     assert not box(0, 0).overlaps(box(32, 0))  # edges touch, no overlap
     assert box(0, 0).overlaps(box(34, 0), padding=4)
+
+
+
+def test_penetration_pushes_along_the_axis_of_least_overlap():
+    assert box(0, 0).penetration(box(30, 5)) == (-2.0, 0.0)
+    assert box(0, 0).penetration(box(5, -30)) == (0.0, 2.0)
+    assert box(0, 0).penetration(box(100, 100)) == (0.0, 0.0)
