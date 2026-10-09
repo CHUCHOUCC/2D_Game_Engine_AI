@@ -44,3 +44,27 @@ class PhysicsWorld:
                 body.vx = -body.vx * body.bounce
             if dy:
                 body.vy = -body.vy * body.bounce
+
+    def _separate(self, a: Body, b: Body) -> bool:
+        """Push two solid bodies apart. Static bodies never move; between two
+        dynamic bodies the lighter one moves more. Returns True if they touched."""
+        if a.static and b.static or not (a.solid and b.solid):
+            return False
+        px, py = a.box.penetration(b.box)
+        if px == 0 and py == 0:
+            return False
+        if a.static:
+            share_a = 0.0
+        elif b.static:
+            share_a = 1.0
+        else:
+            share_a = b.mass / (a.mass + b.mass)
+        a.box = a.box.moved(px * share_a, py * share_a)
+        b.box = b.box.moved(-px * (1 - share_a), -py * (1 - share_a))
+        if px:
+            a.vx, b.vx = -a.vx * a.bounce, -b.vx * b.bounce
+        if py:
+            a.vy, b.vy = -a.vy * a.bounce, -b.vy * b.bounce
+        a.touching.add(b.id)
+        b.touching.add(a.id)
+        return True
