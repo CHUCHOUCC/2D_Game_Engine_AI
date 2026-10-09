@@ -60,3 +60,12 @@ def test_obstacles_reject_bad_counts(monkeypatch):
     c = client(monkeypatch)
     assert c.post("/obstacles", json={"count": 0}, headers=auth()).status_code == 422
     assert c.post("/obstacles", json={"count": 31}, headers=auth()).status_code == 422
+
+
+
+def test_info_describes_the_world(monkeypatch):
+    body = client(monkeypatch).get("/info", headers=auth()).json()
+    assert body["world"] == {"width": 1600, "height": 960, "tile": 32}
+    assert "house" in body["kinds"]
+    assert body["sizes"]["house"] == [96, 96]
+    assert body["default_model"]["difficulty"] == 0.5
