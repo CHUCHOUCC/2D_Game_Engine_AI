@@ -14,7 +14,6 @@ def test_every_kind_keyword():
         assert ask(f"una {word}")[0]["kind"] == kind
 
 
-
 def test_counts_in_digits_and_words():
     assert len(ask("3 monedas")) == 3
     assert len(ask("tres monedas")) == 3
@@ -22,11 +21,9 @@ def test_counts_in_digits_and_words():
     assert len(ask("50 coins")) == 10  # capped
 
 
-
 def test_several_kinds_in_one_request():
     kinds = [o["kind"] for o in ask("2 monedas y una casa, un enemigo")]
     assert kinds == ["coin", "coin", "house", "enemy"]
-
 
 
 def test_position_after_en_or_at():
@@ -35,10 +32,8 @@ def test_position_after_en_or_at():
     assert ask("a tree at (90, 70)")[0]["x"] == 90
 
 
-
 def test_unknown_request_gives_one_box_in_the_middle():
     assert ask("algo bonito") == [{"id": "box-1", "kind": "box", "x": 800.0, "y": 480.0}]
-
 
 
 def test_ids_are_unique():

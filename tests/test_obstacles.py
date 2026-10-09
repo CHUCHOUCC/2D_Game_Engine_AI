@@ -21,11 +21,9 @@ def test_generates_the_requested_number_of_obstacles():
     assert all(obj["kind"] in OBSTACLE_KINDS for obj in objects)
 
 
-
 def test_default_count_is_the_model_budget():
     model = LevelModel(difficulty=0.95)
     assert len(ObstacleGenerator(model).generate(SCENE)) == model.obstacle_budget()
-
 
 
 def test_obstacles_never_overlap_each_other_or_the_scene():
@@ -36,11 +34,9 @@ def test_obstacles_never_overlap_each_other_or_the_scene():
             assert not a.overlaps(b)
 
 
-
 def test_obstacles_stay_inside_the_world():
     for obj in generate(count=25):
         assert AABB.of_object(obj).inside(WORLD_WIDTH, WORLD_HEIGHT)
-
 
 
 def test_spawn_area_is_kept_clear():
@@ -49,12 +45,10 @@ def test_spawn_area_is_kept_clear():
         assert distance >= (256 if obj["kind"] == "enemy" else 128)
 
 
-
 def test_every_coin_stays_reachable():
     objects = generate(count=30, difficulty=0.95)
     spawn = (PLAYER["x"], PLAYER["y"])
     assert reachable_coin_ids(SCENE + objects, spawn) == {c["id"] for c in COINS}
-
 
 
 def test_ids_are_unique_and_new():
@@ -65,11 +59,9 @@ def test_ids_are_unique_and_new():
     assert "ai-wall-1" not in ids
 
 
-
 def test_same_scene_and_model_give_the_same_obstacles():
     assert generate(count=8) == generate(count=8)
     assert generate(count=8) != generate(count=8, difficulty=0.9)
-
 
 
 def test_weights_decide_which_kinds_appear():
@@ -78,7 +70,6 @@ def test_weights_decide_which_kinds_appear():
     objects = ObstacleGenerator(LevelModel(weights=weights)).generate(SCENE, 20)
     spikes = sum(1 for o in objects if o["kind"] == "spike")
     assert spikes >= 15
-
 
 
 def test_higher_difficulty_places_obstacles_closer_to_coins():
@@ -90,16 +81,13 @@ def test_higher_difficulty_places_obstacles_closer_to_coins():
     assert hard < easy
 
 
-
 def test_count_is_capped_and_zero_gives_nothing():
     assert len(generate(count=500)) <= 30
     assert generate(count=0) == []
 
 
-
 def test_scene_without_player_uses_the_left_middle_as_spawn():
     assert ObstacleGenerator.spawn_of(COINS) == (64, 480)
-
 
 
 def test_open_area_ratio_shrinks_with_walls():

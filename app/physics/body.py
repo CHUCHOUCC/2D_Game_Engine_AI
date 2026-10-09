@@ -16,7 +16,6 @@ KIND_PHYSICS = {
 }
 
 
-
 @dataclass
 class Body:
     """A simulated object: its box, velocity and how it reacts to collisions."""

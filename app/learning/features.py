@@ -16,7 +16,6 @@ class RunSummary(BaseModel):
     duration_ms: int = Field(ge=0)
 
 
-
 @dataclass(frozen=True)
 class RunFeatures:
     """A run reduced to numbers between 0 and 1 (except seconds and damage)."""

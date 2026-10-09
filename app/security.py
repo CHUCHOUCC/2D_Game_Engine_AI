@@ -15,7 +15,6 @@ LEEWAY_SECONDS = 5
 _bearer = HTTPBearer(auto_error=False)
 
 
-
 class ReplayCache:
     """Remembers token ids (jti) until they expire, so a captured token cannot
     be sent twice. In memory: enough for one instance of the service."""
@@ -36,7 +35,6 @@ class ReplayCache:
 
 
 replay_cache = ReplayCache()
-
 
 
 def _unauthorized(detail: str) -> HTTPException:

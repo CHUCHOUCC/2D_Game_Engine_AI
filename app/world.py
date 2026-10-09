@@ -30,6 +30,5 @@ COLLECTIBLE_KINDS = frozenset({"coin"})
 OBSTACLE_KINDS = tuple(kind for kind in GENERATED_KINDS if kind not in COLLECTIBLE_KINDS)
 
 
-
 def inside_world(x: float, y: float) -> bool:
     return 0 <= x <= WORLD_WIDTH and 0 <= y <= WORLD_HEIGHT

@@ -18,7 +18,6 @@ DEFAULT_WEIGHTS = {
 }
 
 
-
 @dataclass
 class LevelModel:
     """Everything the AI knows about one level, learned from the runs played on it.
@@ -67,7 +66,6 @@ class LevelModel:
     def probabilities(self) -> dict:
         total = sum(self.weights.values())
         return {kind: weight / total for kind, weight in self.weights.items()}
-
 
 
 def _number(value, default: float, low: float, high: float) -> float:

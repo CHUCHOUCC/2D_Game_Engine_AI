@@ -16,17 +16,14 @@ def test_valid_token_is_accepted(monkeypatch):
     assert client(monkeypatch).get("/info", headers=auth()).status_code == 200
 
 
-
 def test_missing_or_garbage_token_is_rejected(monkeypatch):
     c = client(monkeypatch)
     assert c.get("/info").status_code == 401
     assert c.get("/info", headers={"Authorization": "Bearer nonsense"}).status_code == 401
 
 
-
 def test_the_raw_key_header_is_not_enough(monkeypatch):
     assert client(monkeypatch).get("/info", headers={"X-Service-Key": KEY}).status_code == 401
-
 
 
 def test_wrong_key_audience_issuer_or_expired_token_is_rejected(monkeypatch):
@@ -40,7 +37,6 @@ def test_wrong_key_audience_issuer_or_expired_token_is_rejected(monkeypatch):
         assert c.get("/info", headers=headers).status_code == 401
 
 
-
 def test_a_token_cannot_be_used_twice(monkeypatch):
     c = client(monkeypatch)
     headers = auth(jti="replay-me")
@@ -50,11 +46,9 @@ def test_a_token_cannot_be_used_twice(monkeypatch):
     assert response.json()["detail"] == "Service token already used"
 
 
-
 def test_short_or_missing_key_returns_503(monkeypatch):
     assert client(monkeypatch, key="").get("/info", headers=auth()).status_code == 503
     assert client(monkeypatch, key="short").get("/info", headers=auth()).status_code == 503
-
 
 
 def test_replay_cache_forgets_expired_ids():

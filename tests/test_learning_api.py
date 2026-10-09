@@ -20,7 +20,6 @@ def test_learn_starts_from_an_empty_model(monkeypatch):
     assert body["obstacle_budget"] >= 12
 
 
-
 def test_learn_continues_from_the_given_model(monkeypatch):
     c = client(monkeypatch)
     first = c.post("/learn", json={"model": {}, "run": WIN}, headers=auth()).json()["model"]
@@ -29,12 +28,10 @@ def test_learn_continues_from_the_given_model(monkeypatch):
     assert second["difficulty"] > first["difficulty"]
 
 
-
 def test_learn_rejects_invalid_runs(monkeypatch):
     c = client(monkeypatch)
     assert c.post("/learn", json={"run": {**WIN, "outcome": "draw"}}, headers=auth()).status_code == 422
     assert c.post("/learn", json={"model": {}}, headers=auth()).status_code == 422
-
 
 
 def test_obstacles_endpoint(monkeypatch):
@@ -48,12 +45,10 @@ def test_obstacles_endpoint(monkeypatch):
     assert 0 < body["open_area"] <= 1
 
 
-
 def test_obstacles_without_count_use_the_budget(monkeypatch):
     model = {"difficulty": 0.95}
     body = client(monkeypatch).post("/obstacles", json={"model": model}, headers=auth()).json()
     assert len(body["objects"]) == 19
-
 
 
 def test_obstacles_reject_bad_counts(monkeypatch):
@@ -62,14 +57,12 @@ def test_obstacles_reject_bad_counts(monkeypatch):
     assert c.post("/obstacles", json={"count": 31}, headers=auth()).status_code == 422
 
 
-
 def test_info_describes_the_world(monkeypatch):
     body = client(monkeypatch).get("/info", headers=auth()).json()
     assert body["world"] == {"width": 1600, "height": 960, "tile": 32}
     assert "house" in body["kinds"]
     assert body["sizes"]["house"] == [96, 96]
     assert body["default_model"]["difficulty"] == 0.5
-
 
 
 def test_learning_routes_need_a_token(monkeypatch):

@@ -21,7 +21,6 @@ def reachable_cells(grid: OccupancyGrid, start: tuple[int, int]) -> set:
     return seen
 
 
-
 def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, int]) -> int | None:
     """Number of steps of the shortest walk from start to goal, or None if blocked."""
     if not grid.is_free(*start) or not grid.is_free(*goal):
@@ -38,7 +37,6 @@ def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, in
                 distance[nxt] = distance[cell] + 1
                 pending.append(nxt)
     return None
-
 
 
 def reachable_coin_ids(scene: list, spawn: tuple[float, float]) -> set:

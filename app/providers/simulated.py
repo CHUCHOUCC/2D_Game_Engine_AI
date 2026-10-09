@@ -24,7 +24,6 @@ _NUMBER_WORDS = {
 MAX_PER_KIND = 10
 
 
-
 def _parts(text: str) -> list:
     """'3 coins and a wall at 400 300' -> ['3 coins', 'a wall at 400 300']."""
     # A comma followed by a number belongs to a position like "(90, 70)".
@@ -33,7 +32,6 @@ def _parts(text: str) -> list:
 
 def _kind_of(part: str):
     return next((name for name, words in _KINDS if any(w in part for w in words)), None)
-
 
 
 def _count_of(part: str, kind_word_at: int) -> int:
@@ -52,7 +50,6 @@ def _position_of(part: str):
     if match:
         return min(int(match.group(1)), WORLD_WIDTH), min(int(match.group(2)), WORLD_HEIGHT)
     return None
-
 
 
 class SimulatedProvider(AiProvider):

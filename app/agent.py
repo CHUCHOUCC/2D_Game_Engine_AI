@@ -17,7 +17,6 @@ SYSTEM_PROMPT = (
 )
 
 
-
 class AgentError(Exception):
     """The model's reply could not be turned into valid game objects."""
 
@@ -27,7 +26,6 @@ class GameObject(BaseModel):
     kind: str
     x: float = Field(ge=0, le=WORLD_WIDTH)
     y: float = Field(ge=0, le=WORLD_HEIGHT)
-
 
 
 def describe_scene(scene: list) -> str:
@@ -41,7 +39,6 @@ def describe_scene(scene: list) -> str:
     player = next((o for o in scene if o.get("kind") == "player"), None)
     where = f" The player starts at ({player['x']:.0f}, {player['y']:.0f})." if player else ""
     return f"The scene already has: {parts}.{where} Do not place objects on top of them."
-
 
 
 class GameAgent:

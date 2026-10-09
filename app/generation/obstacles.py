@@ -119,13 +119,11 @@ class ObstacleGenerator:
         return created
 
 
-
 def _new_id(kind: str, used: set) -> str:
     n = 1
     while f"ai-{kind}-{n}" in used:
         n += 1
     return f"ai-{kind}-{n}"
-
 
 
 def open_area_ratio(scene: list) -> float:

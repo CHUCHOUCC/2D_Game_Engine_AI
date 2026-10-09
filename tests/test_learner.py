@@ -21,7 +21,6 @@ def test_learning_rate_shrinks_but_never_reaches_zero():
     assert learner.learning_rate(10_000) == 0.05
 
 
-
 def test_easy_wins_raise_difficulty_and_the_obstacle_budget():
     model, _ = learn(LevelModel(), EASY_WIN, times=5)
     assert model.difficulty > 0.5
@@ -29,11 +28,9 @@ def test_easy_wins_raise_difficulty_and_the_obstacle_budget():
     assert model.runs == 5
 
 
-
 def test_hard_losses_lower_difficulty():
     model, _ = learn(LevelModel(), HARD_LOSS, times=5)
     assert model.difficulty < 0.5
-
 
 
 def test_difficulty_stays_within_bounds():
@@ -43,12 +40,10 @@ def test_difficulty_stays_within_bounds():
     assert low.difficulty >= 0.05
 
 
-
 def test_easy_wins_favour_hazards():
     model, _ = learn(LevelModel(), EASY_WIN, times=3)
     assert model.weights["enemy"] > 0.6
     assert model.weights["spike"] > 0.5
-
 
 
 def test_overwhelmed_players_get_fewer_hazards_and_more_open_levels():
@@ -57,13 +52,11 @@ def test_overwhelmed_players_get_fewer_hazards_and_more_open_levels():
     assert model.weights["wall"] < 1.0
 
 
-
 def test_first_run_sets_the_averages_and_later_runs_blend():
     model, _ = learn(LevelModel(), EASY_WIN)
     assert model.win_rate == 1.0
     model, _ = learn(model, HARD_LOSS)
     assert 0 < model.win_rate < 1.0
-
 
 
 def test_rewards_improve_while_the_model_adapts_to_a_strong_player():

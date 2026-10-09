@@ -13,7 +13,6 @@ from .world import ALL_KINDS, SIZES, TILE_SIZE, WORLD_HEIGHT, WORLD_WIDTH
 router = APIRouter(dependencies=[Depends(require_service_token)])
 
 
-
 class LearnRequest(BaseModel):
     model: dict = Field(default_factory=dict)
     run: RunSummary
@@ -29,7 +28,6 @@ def learn(body: LearnRequest):
         "difficulty": model.difficulty,
         "obstacle_budget": model.obstacle_budget(),
     }
-
 
 
 class ObstacleRequest(BaseModel):
@@ -48,7 +46,6 @@ def obstacles(body: ObstacleRequest):
         "difficulty": model.difficulty,
         "open_area": round(open_area_ratio(scene + objects), 4),
     }
-
 
 
 @router.get("/info")

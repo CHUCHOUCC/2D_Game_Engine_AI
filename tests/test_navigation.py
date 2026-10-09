@@ -11,7 +11,6 @@ def test_cell_of_and_center_of():
     assert grid.center_of(1, 2) == (48, 80)
 
 
-
 def test_block_box_covers_only_the_tiles_under_it():
     grid = OccupancyGrid()
     grid.block_box(AABB(48, 48, 16, 16))  # exactly tile (1, 1)
@@ -20,12 +19,10 @@ def test_block_box_covers_only_the_tiles_under_it():
     assert grid.free_count() == 50 * 30 - 1
 
 
-
 def test_from_scene_blocks_solids_and_optionally_spikes():
     scene = [{"id": "h", "kind": "house", "x": 144, "y": 144}, {"id": "s", "kind": "spike", "x": 400, "y": 400}]
     assert OccupancyGrid.from_scene(scene).free_count() == 1500 - 9
     assert OccupancyGrid.from_scene(scene, avoid_hazards=True).free_count() == 1500 - 10
-
 
 
 def test_reachable_cells_stop_at_walls():
@@ -38,7 +35,6 @@ def test_reachable_cells_stop_at_walls():
     assert reachable_cells(grid, (2, 0)) == set()
 
 
-
 def test_path_length():
     grid = OccupancyGrid(cols=5, rows=3)
     grid.block_box(AABB(2 * 32 + 16, 16, 16, 16))
@@ -46,7 +42,6 @@ def test_path_length():
     assert path_length(grid, (0, 0), (4, 0)) == 8
     assert path_length(grid, (0, 0), (0, 0)) == 0
     assert path_length(grid, (0, 0), (2, 0)) is None
-
 
 
 def test_reachable_coin_ids():

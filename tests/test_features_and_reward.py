@@ -19,7 +19,6 @@ def test_run_summary_rejects_unknown_outcomes_and_negatives():
         run(score=-1)
 
 
-
 def test_features_of_a_run():
     features = RunFeatures.of(run(coins_collected=2, damage_taken=3, duration_ms=1500))
     assert features.won == 1.0 and features.quit == 0.0
@@ -28,10 +27,8 @@ def test_features_of_a_run():
     assert features.seconds == 1.5
 
 
-
 def test_a_level_without_coins_counts_as_all_coins_taken():
     assert RunFeatures.of(run(coins_collected=0, coins_total=0)).coin_ratio == 1.0
-
 
 
 def test_performance_from_perfect_to_crushed():
@@ -42,12 +39,10 @@ def test_performance_from_perfect_to_crushed():
     assert 0.0 < middle < 1.0
 
 
-
 def test_reward_is_highest_at_the_target():
     assert reward(TARGET_PERFORMANCE) == 1.0
     assert reward(1.0) < 1.0 and reward(0.0) == 0.0
     assert reward(0.6) > reward(0.3)
-
 
 
 def test_quitting_halves_the_reward():

@@ -15,7 +15,6 @@ app = FastAPI(title="2D Engine AI Service", version="2.0.0")
 app.include_router(learning_router)
 
 
-
 def get_agent() -> GameAgent:
     try:
         return GameAgent(create_provider())
@@ -26,7 +25,6 @@ def get_agent() -> GameAgent:
 @app.get("/health")
 def health():
     return {"ok": True}
-
 
 
 @app.post("/generate", dependencies=[Depends(require_service_token)])
