@@ -48,3 +48,10 @@ def test_easy_wins_favour_hazards():
     model, _ = learn(LevelModel(), EASY_WIN, times=3)
     assert model.weights["enemy"] > 0.6
     assert model.weights["spike"] > 0.5
+
+
+
+def test_overwhelmed_players_get_fewer_hazards_and_more_open_levels():
+    model, _ = learn(LevelModel(), HARD_LOSS, times=3)
+    assert model.weights["enemy"] < 0.6
+    assert model.weights["wall"] < 1.0
