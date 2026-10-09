@@ -46,3 +46,9 @@ def test_generate_moves_objects_off_the_existing_scene(monkeypatch):
     body = {"prompt": "una caja en 400 300", "scene": scene}
     placed = client.post("/generate", json=body, headers=auth()).json()["objects"][0]
     assert (placed["x"], placed["y"]) != (400, 300)
+
+
+
+def test_provider_failure_returns_502(monkeypatch):
+    client = client_with(FailingProvider(), monkeypatch)
+    assert client.post("/generate", json={"prompt": "a coin"}, headers=auth()).status_code == 502
