@@ -26,3 +26,8 @@ def test_features_of_a_run():
     assert features.coin_ratio == 0.5
     assert features.damage == 3.0
     assert features.seconds == 1.5
+
+
+
+def test_a_level_without_coins_counts_as_all_coins_taken():
+    assert RunFeatures.of(run(coins_collected=0, coins_total=0)).coin_ratio == 1.0
