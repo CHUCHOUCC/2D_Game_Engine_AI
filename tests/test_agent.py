@@ -38,3 +38,14 @@ def test_simulated_provider_understands_spanish_keywords():
 def test_reply_wrapped_in_code_fences_is_accepted():
     reply = '```json\n[{"id": "a", "kind": "box", "x": 100, "y": 200}]\n```'
     assert agent_replying(reply).generate("x")[0]["id"] == "a"
+
+
+
+def test_reply_that_is_not_json_is_rejected():
+    with pytest.raises(AgentError, match="valid JSON"):
+        agent_replying("Sure! Here is your coin.").generate("x")
+
+
+def test_reply_that_is_not_a_list_is_rejected():
+    with pytest.raises(AgentError, match="array"):
+        agent_replying('{"id": "a"}').generate("x")
