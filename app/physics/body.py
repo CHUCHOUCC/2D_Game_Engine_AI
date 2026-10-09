@@ -36,3 +36,8 @@ class Body:
     def of_object(cls, obj: dict) -> "Body":
         static, mass, drag, bounce = KIND_PHYSICS.get(obj["kind"], (True, 1.0, 0.0, 0.0))
         return cls(str(obj["id"]), obj["kind"], AABB.of_object(obj), static, mass, drag, bounce)
+
+    @property
+    def solid(self) -> bool:
+        """Coins and spikes overlap the player instead of stopping it."""
+        return self.kind not in ("coin", "spike")
