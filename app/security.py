@@ -1,13 +1,15 @@
-import hmac
 import os
+import threading
+import time
 
-from fastapi import Header, HTTPException
+import jwt
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+EXPECTED_ISSUER = "2d-engine-backend"
+AUDIENCE = "ai-service"
+MIN_KEY_LENGTH = 32
+# Tokens are valid for 60 s; a little leeway covers clock differences.
+LEEWAY_SECONDS = 5
 
-def require_service_key(x_service_key: str = Header(default="")):
-    """Only the backend knows AI_SERVICE_KEY, so only it can call this service."""
-    expected = os.environ.get("AI_SERVICE_KEY", "")
-    if not expected:
-        raise HTTPException(status_code=503, detail="Service key is not configured")
-    if not hmac.compare_digest(x_service_key.encode("utf-8"), expected.encode("utf-8")):
-        raise HTTPException(status_code=401, detail="Invalid service key")
+_bearer = HTTPBearer(auto_error=False)
