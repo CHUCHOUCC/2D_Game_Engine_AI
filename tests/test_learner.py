@@ -19,3 +19,11 @@ def test_learning_rate_shrinks_but_never_reaches_zero():
     assert learner.learning_rate(0) == 0.3
     assert learner.learning_rate(3) < learner.learning_rate(0)
     assert learner.learning_rate(10_000) == 0.05
+
+
+
+def test_easy_wins_raise_difficulty_and_the_obstacle_budget():
+    model, _ = learn(LevelModel(), EASY_WIN, times=5)
+    assert model.difficulty > 0.5
+    assert model.obstacle_budget() > LevelModel().obstacle_budget()
+    assert model.runs == 5
