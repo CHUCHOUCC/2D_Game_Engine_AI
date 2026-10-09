@@ -40,3 +40,10 @@ def test_obstacles_never_overlap_each_other_or_the_scene():
 def test_obstacles_stay_inside_the_world():
     for obj in generate(count=25):
         assert AABB.of_object(obj).inside(WORLD_WIDTH, WORLD_HEIGHT)
+
+
+
+def test_spawn_area_is_kept_clear():
+    for obj in generate(count=25):
+        distance = math.dist((obj["x"], obj["y"]), (PLAYER["x"], PLAYER["y"]))
+        assert distance >= (256 if obj["kind"] == "enemy" else 128)
