@@ -41,3 +41,12 @@ class RunFeatures:
             seconds=run.duration_ms / 1000,
             kills=float(run.enemies_defeated),
         )
+
+    def performance(self) -> float:
+        """0 (crushed by the level) to 1 (walked through it).
+
+        Winning counts most, then coins, then staying unhurt; every death costs.
+        """
+        unhurt = 1.0 - min(self.damage / 5.0, 1.0)
+        value = 0.5 * self.won + 0.3 * self.coin_ratio + 0.2 * unhurt - 0.1 * min(self.deaths, 3)
+        return min(1.0, max(0.0, value))
