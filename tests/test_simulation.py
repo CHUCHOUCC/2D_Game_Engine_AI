@@ -40,3 +40,12 @@ def test_bodies_are_kept_inside_the_world():
     world.step(0.1)
     assert enemy.box.left == 0
     assert enemy.vx > 0  # bounced
+
+
+
+def test_dynamic_body_is_pushed_out_of_a_static_one():
+    world = PhysicsWorld.from_scene([obj("w", "wall", 100, 100), obj("b", "box", 120, 100)])
+    assert world.step(0) == 1
+    assert world.body("w").box.cx == 100
+    assert world.body("b").box.left == world.body("w").box.right
+    assert "w" in world.body("b").touching
