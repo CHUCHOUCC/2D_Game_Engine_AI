@@ -25,3 +25,14 @@ def test_from_scene_blocks_solids_and_optionally_spikes():
     scene = [{"id": "h", "kind": "house", "x": 144, "y": 144}, {"id": "s", "kind": "spike", "x": 400, "y": 400}]
     assert OccupancyGrid.from_scene(scene).free_count() == 1500 - 9
     assert OccupancyGrid.from_scene(scene, avoid_hazards=True).free_count() == 1500 - 10
+
+
+
+def test_reachable_cells_stop_at_walls():
+    grid = OccupancyGrid(cols=5, rows=3)
+    for row in range(3):
+        grid.block_box(AABB(2 * 32 + 16, row * 32 + 16, 16, 16))  # wall in column 2
+    area = reachable_cells(grid, (0, 0))
+    assert len(area) == 6
+    assert (4, 0) not in area
+    assert reachable_cells(grid, (2, 0)) == set()
