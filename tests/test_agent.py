@@ -74,3 +74,10 @@ def test_missing_field_and_non_objects_are_rejected():
         agent_replying(json.dumps([{"id": "a", "kind": "box", "x": 1}])).generate("x")
     with pytest.raises(AgentError, match="JSON object"):
         agent_replying("[1, 2]").generate("x")
+
+
+
+def test_too_many_objects_are_rejected():
+    reply = json.dumps([{"id": str(i), "kind": "box", "x": 100, "y": 100} for i in range(31)])
+    with pytest.raises(AgentError, match="Too many"):
+        agent_replying(reply).generate("x")
