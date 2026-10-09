@@ -47,3 +47,9 @@ def test_reward_is_highest_at_the_target():
     assert reward(TARGET_PERFORMANCE) == 1.0
     assert reward(1.0) < 1.0 and reward(0.0) == 0.0
     assert reward(0.6) > reward(0.3)
+
+
+
+def test_quitting_halves_the_reward():
+    assert reward_with_quit_penalty(TARGET_PERFORMANCE, quit=True) == 0.5
+    assert reward_with_quit_penalty(TARGET_PERFORMANCE, quit=False) == 1.0
