@@ -18,3 +18,10 @@ def test_block_box_covers_only_the_tiles_under_it():
     assert not grid.is_free(1, 1)
     assert grid.is_free(0, 1) and grid.is_free(2, 1) and grid.is_free(1, 2)
     assert grid.free_count() == 50 * 30 - 1
+
+
+
+def test_from_scene_blocks_solids_and_optionally_spikes():
+    scene = [{"id": "h", "kind": "house", "x": 144, "y": 144}, {"id": "s", "kind": "spike", "x": 400, "y": 400}]
+    assert OccupancyGrid.from_scene(scene).free_count() == 1500 - 9
+    assert OccupancyGrid.from_scene(scene, avoid_hazards=True).free_count() == 1500 - 10
