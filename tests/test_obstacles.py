@@ -34,3 +34,9 @@ def test_obstacles_never_overlap_each_other_or_the_scene():
     for i, a in enumerate(boxes):
         for b in boxes[i + 1:]:
             assert not a.overlaps(b)
+
+
+
+def test_obstacles_stay_inside_the_world():
+    for obj in generate(count=25):
+        assert AABB.of_object(obj).inside(WORLD_WIDTH, WORLD_HEIGHT)
