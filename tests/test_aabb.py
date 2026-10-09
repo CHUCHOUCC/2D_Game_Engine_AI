@@ -30,3 +30,10 @@ def test_penetration_pushes_along_the_axis_of_least_overlap():
     assert box(0, 0).penetration(box(30, 5)) == (-2.0, 0.0)
     assert box(0, 0).penetration(box(5, -30)) == (0.0, 2.0)
     assert box(0, 0).penetration(box(100, 100)) == (0.0, 0.0)
+
+
+
+def test_moved_and_inside():
+    assert box(10, 10).moved(5, -5) == box(15, 5)
+    assert box(16, 16).inside(100, 100)
+    assert not box(10, 16).inside(100, 100)
