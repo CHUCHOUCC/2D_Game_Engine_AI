@@ -7,6 +7,9 @@ from .base import AiProvider
 
 # Keywords per kind, in English and Spanish (with and without accents).
 _KINDS = (
+    ("villager", ("villager", "aldeano", "campesino")),
+    ("knight", ("knight", "caballero", "guerrero")),
+    ("wizard", ("wizard", "mago", "hechicero")),
     ("coin", ("coin", "moneda")),
     ("enemy", ("enemy", "enemies", "enemigo", "slime", "monstruo")),
     ("house", ("house", "casa")),
@@ -26,8 +29,9 @@ MAX_PER_KIND = 10
 
 def _parts(text: str) -> list:
     """'3 coins and a wall at 400 300' -> ['3 coins', 'a wall at 400 300']."""
-    # A comma followed by a number belongs to a position like "(90, 70)".
-    return [p.strip() for p in re.split(r",(?!\s*\d)|;|\by\b|\band\b", text) if p.strip()]
+    # A comma between two numbers belongs to a position like "(90, 70)";
+    # any other comma ("un aldeano, 2 caballeros") separates two requests.
+    return [p.strip() for p in re.split(r"(?<!\d),|,(?!\s*\d)|;|\by\b|\band\b", text) if p.strip()]
 
 
 def _kind_of(part: str):
