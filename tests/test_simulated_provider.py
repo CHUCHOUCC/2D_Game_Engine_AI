@@ -39,3 +39,9 @@ def test_unknown_request_gives_one_box_in_the_middle():
 def test_ids_are_unique():
     ids = [o["id"] for o in ask("3 monedas y 2 cajas")]
     assert len(ids) == len(set(ids)) == 5
+
+
+def test_2d_characters_in_spanish_and_english():
+    kinds = [o["kind"] for o in ask("un aldeano, 2 caballeros y un mago en 300 200")]
+    assert kinds == ["villager", "knight", "knight", "wizard"]
+    assert ask("a wizard")[0]["kind"] == "wizard"
