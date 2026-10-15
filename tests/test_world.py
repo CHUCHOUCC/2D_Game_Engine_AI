@@ -30,3 +30,10 @@ def test_every_kind_has_a_size_and_solids_are_known_kinds():
 def test_inside_world():
     assert inside_world(0, 0) and inside_world(1600, 960)
     assert not inside_world(-1, 5) and not inside_world(5, 961)
+
+
+def test_characters_can_be_generated_but_are_never_obstacles():
+    from app.world import CHARACTER_KINDS
+
+    assert CHARACTER_KINDS <= set(GENERATED_KINDS)
+    assert not CHARACTER_KINDS & set(OBSTACLE_KINDS)
