@@ -13,6 +13,9 @@ KIND_PHYSICS = {
     "spike": (True, 1.0, 0.0, 0.0),
     "coin": (True, 1.0, 0.0, 0.0),
     "enemy": (False, 1.5, 200.0, 0.2),
+    "villager": (False, 1.2, 300.0, 0.1),
+    "knight": (False, 1.2, 300.0, 0.1),
+    "wizard": (False, 1.2, 300.0, 0.1),
 }
 
 
