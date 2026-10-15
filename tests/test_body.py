@@ -23,3 +23,9 @@ def test_coins_and_spikes_do_not_block():
 def test_to_object_round_trip():
     obj = {"id": "b", "kind": "box", "x": 12.34, "y": 50}
     assert Body.of_object(obj).to_object() == {"id": "b", "kind": "box", "x": 12.3, "y": 50.0}
+
+
+def test_characters_are_dynamic_and_solid():
+    for kind in ("villager", "knight", "wizard"):
+        body = Body.of_object({"id": kind, "kind": kind, "x": 0, "y": 0})
+        assert not body.static and body.solid
