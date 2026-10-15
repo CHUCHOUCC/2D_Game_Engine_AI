@@ -27,6 +27,7 @@ Every route except `/health` needs `Authorization: Bearer <service token>`.
 | Code | Role |
 |---|---|
 | `app/world.py` | World size (1600 × 960, tiles of 32), kinds and their sizes; same values as the backend and frontend |
+| 2D characters | `villager`, `knight` and `wizard` can be asked for in words ("un mago en 300 200") but are never placed as obstacles |
 | `app/physics/` | `AABB`, `Body`, `PhysicsWorld`: Arcade-style velocity, drag, bounds and collision separation |
 | `app/navigation/` | `OccupancyGrid` and breadth-first search: which coins the player can reach |
 | `app/learning/` | `LevelModel`, `RunFeatures`, `reward`, `Learner`: online learning from runs |
