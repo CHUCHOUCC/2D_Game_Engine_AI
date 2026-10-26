@@ -1,5 +1,7 @@
 import math
 
+from app.world import ENEMY_KINDS, HAZARD_KINDS
+
 from .features import RunFeatures, RunSummary
 from .model import MAX_DIFFICULTY, MIN_DIFFICULTY, MIN_WEIGHT, LevelModel
 from .reward import TARGET_PERFORMANCE, reward_with_quit_penalty
@@ -35,25 +37,22 @@ class Learner:
     def _update_weights(self, model: LevelModel, features: RunFeatures, rate: float) -> None:
         w = model.weights
         hurt = min(features.damage / 5.0, 1.0)
+        hazards = sorted(HAZARD_KINDS)
         if features.won and hurt < 0.4:
             # Easy win: enemies and spikes were not a threat, use them more.
-            w["enemy"] *= 1 + rate
-            w["spike"] *= 1 + rate
+            _scale(w, hazards, 1 + rate)
         elif not features.won and hurt >= 0.6:
             # The player was overwhelmed by hazards: fewer of them.
-            w["enemy"] *= 1 - rate / 2
-            w["spike"] *= 1 - rate / 2
+            _scale(w, hazards, 1 - rate / 2)
         if not features.won and features.coin_ratio < 0.5:
             # Coins were hard to reach: the maze is too closed.
-            w["wall"] *= 1 - rate / 2
-            w["house"] *= 1 - rate / 2
+            _scale(w, ("wall", "house", "fence"), 1 - rate / 2)
         if features.won and features.coin_ratio == 1.0:
-            # Every coin was collected easily: build more walls and boxes around them.
-            w["wall"] *= 1 + rate / 2
-            w["box"] *= 1 + rate / 2
+            # Every coin was collected easily: build more walls, boxes and barrels around them.
+            _scale(w, ("wall", "box", "barrel"), 1 + rate / 2)
         if features.kills >= 3:
-            # A good fighter: more enemies make the level interesting.
-            w["enemy"] *= 1 + rate / 2
+            # A good fighter: more (and tougher) enemies make the level interesting.
+            _scale(w, sorted(ENEMY_KINDS), 1 + rate / 2)
         for kind in w:
             w[kind] = round(min(10.0, max(MIN_WEIGHT, w[kind])), 4)
 
@@ -68,3 +67,9 @@ class Learner:
         model.runs += 1
         model.difficulty = round(model.difficulty, 4)
         return model, reward_with_quit_penalty(performance, bool(features.quit))
+
+
+def _scale(weights: dict, kinds, factor: float) -> None:
+    for kind in kinds:
+        if kind in weights:
+            weights[kind] *= factor
