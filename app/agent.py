@@ -14,7 +14,9 @@ SYSTEM_PROMPT = (
     f'{{"id": string, "kind": one of {list(GENERATED_KINDS)}, "x": number, "y": number}}. '
     f"x and y are the centre of the object; x is between 0 and {WORLD_WIDTH} and y between 0 and {WORLD_HEIGHT}. "
     "Walls and houses block the way, boxes can be pushed, spikes and enemies hurt, coins are collected, "
-    "villagers, knights and wizards are friendly characters that walk around."
+    "villagers, knights and wizards are friendly characters that walk around, "
+    "bats, spiders, ghosts and brutes are enemies, chests drop an item, "
+    "potions heal and swords, axes, wands and bows are weapons the player can pick up."
 )
 
 
