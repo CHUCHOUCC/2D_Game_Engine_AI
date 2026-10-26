@@ -16,7 +16,23 @@ KIND_PHYSICS = {
     "villager": (False, 1.2, 300.0, 0.1),
     "knight": (False, 1.2, 300.0, 0.1),
     "wizard": (False, 1.2, 300.0, 0.1),
+    "bat": (False, 0.5, 100.0, 0.3),
+    "spider": (False, 1.0, 200.0, 0.2),
+    "ghost": (False, 1.0, 100.0, 0.0),
+    "brute": (False, 4.0, 300.0, 0.0),
+    "chest": (True, 1.0, 0.0, 0.0),
+    "potion": (True, 1.0, 0.0, 0.0),
+    "sword": (True, 1.0, 0.0, 0.0),
+    "axe": (True, 1.0, 0.0, 0.0),
+    "wand": (True, 1.0, 0.0, 0.0),
+    "bow": (True, 1.0, 0.0, 0.0),
+    "barrel": (False, 3.0, 500.0, 0.0),
+    "fence": (True, 1.0, 0.0, 0.0),
+    "bush": (True, 1.0, 0.0, 0.0),
 }
+
+# Kinds that overlap instead of blocking: pick-ups, traps and enemies that fly or float.
+NOT_SOLID = frozenset({"coin", "spike", "potion", "sword", "axe", "wand", "bow", "bat", "ghost"})
 
 
 @dataclass
@@ -41,8 +57,8 @@ class Body:
 
     @property
     def solid(self) -> bool:
-        """Coins and spikes overlap the player instead of stopping it."""
-        return self.kind not in ("coin", "spike")
+        """Pick-ups, spikes, bats and ghosts overlap the player instead of stopping it."""
+        return self.kind not in NOT_SOLID
 
     def to_object(self) -> dict:
         return {"id": self.id, "kind": self.kind, "x": round(self.box.cx, 1), "y": round(self.box.cy, 1)}
