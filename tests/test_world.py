@@ -37,3 +37,12 @@ def test_characters_can_be_generated_but_are_never_obstacles():
 
     assert CHARACTER_KINDS <= set(GENERATED_KINDS)
     assert not CHARACTER_KINDS & set(OBSTACLE_KINDS)
+
+
+def test_rewards_and_new_enemies():
+    from app.world import ENEMY_KINDS, HAZARD_KINDS, REWARD_KINDS, SOLID_KINDS
+
+    assert not REWARD_KINDS & set(OBSTACLE_KINDS)
+    assert ENEMY_KINDS <= HAZARD_KINDS
+    assert {"bat", "spider", "ghost", "brute", "barrel", "fence", "bush"} <= set(OBSTACLE_KINDS)
+    assert "chest" in SOLID_KINDS
