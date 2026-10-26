@@ -15,6 +15,13 @@ DEFAULT_WEIGHTS = {
     "house": 0.3,
     "spike": 0.5,
     "enemy": 0.6,
+    "bat": 0.3,
+    "spider": 0.4,
+    "ghost": 0.3,
+    "brute": 0.2,
+    "barrel": 0.6,
+    "fence": 0.6,
+    "bush": 0.5,
 }
 
 
