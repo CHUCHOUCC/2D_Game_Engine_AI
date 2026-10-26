@@ -45,3 +45,11 @@ def test_2d_characters_in_spanish_and_english():
     kinds = [o["kind"] for o in ask("un aldeano, 2 caballeros y un mago en 300 200")]
     assert kinds == ["villager", "knight", "knight", "wizard"]
     assert ask("a wizard")[0]["kind"] == "wizard"
+
+
+def test_enemies_items_and_obstacles_in_spanish():
+    request = ("un murciélago, una araña, un fantasma, un ogro, un cofre, una poción, "
+               "una espada, un hacha, una varita, un arco, un barril, una valla y un arbusto")
+    kinds = [o["kind"] for o in ask(request)]
+    assert kinds == ["bat", "spider", "ghost", "brute", "chest", "potion", "sword", "axe", "wand", "bow",
+                     "barrel", "fence", "bush"]
