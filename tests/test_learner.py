@@ -67,3 +67,9 @@ def test_rewards_improve_while_the_model_adapts_to_a_strong_player():
     tougher = dict(EASY_WIN, coins_collected=4, damage_taken=2)
     _, later = learn(model, tougher)
     assert later[0] > first
+
+
+def test_every_enemy_kind_follows_the_hazard_rules():
+    model, _ = learn(LevelModel(), EASY_WIN, times=2)
+    for kind in ("bat", "spider", "ghost", "brute"):
+        assert model.weights[kind] > LevelModel().weights[kind]
