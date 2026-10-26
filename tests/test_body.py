@@ -29,3 +29,9 @@ def test_characters_are_dynamic_and_solid():
     for kind in ("villager", "knight", "wizard"):
         body = Body.of_object({"id": kind, "kind": kind, "x": 0, "y": 0})
         assert not body.static and body.solid
+
+
+def test_pickups_bats_and_ghosts_do_not_block():
+    for kind in ("potion", "sword", "bat", "ghost"):
+        assert not Body.of_object({"id": kind, "kind": kind, "x": 0, "y": 0}).solid
+    assert Body.of_object({"id": "c", "kind": "chest", "x": 0, "y": 0}).solid
