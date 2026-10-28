@@ -2,9 +2,9 @@ import math
 
 from app.generation import ObstacleGenerator, open_area_ratio
 from app.learning import LevelModel
-from app.navigation import reachable_coin_ids
+from app.navigation import reachable_coin_ids, reachable_ids
 from app.physics import AABB
-from app.world import OBSTACLE_KINDS, WORLD_HEIGHT, WORLD_WIDTH
+from app.world import ENEMY_KINDS, OBSTACLE_KINDS, WORLD_HEIGHT, WORLD_WIDTH
 
 PLAYER = {"id": "hero", "kind": "player", "x": 64, "y": 480}
 COINS = [{"id": f"c{i}", "kind": "coin", "x": 300 + 250 * i, "y": 480} for i in range(5)]
@@ -42,7 +42,7 @@ def test_obstacles_stay_inside_the_world():
 def test_spawn_area_is_kept_clear():
     for obj in generate(count=25):
         distance = math.dist((obj["x"], obj["y"]), (PLAYER["x"], PLAYER["y"]))
-        assert distance >= (256 if obj["kind"] == "enemy" else 128)
+        assert distance >= (256 if obj["kind"] in ENEMY_KINDS else 128)
 
 
 def test_every_coin_stays_reachable():
@@ -94,3 +94,26 @@ def test_open_area_ratio_shrinks_with_walls():
     assert open_area_ratio([]) == 1.0
     walls = [{"id": f"w{r}", "kind": "wall", "x": 816, "y": r * 32 + 16} for r in range(30)]
     assert 0.45 < open_area_ratio(walls) < 0.55
+
+
+def test_every_enemy_kind_keeps_its_distance_from_the_spawn():
+    model = {"difficulty": 0.95, "weights": {"brute": 10.0, "bat": 10.0}}
+    for obj in generate(count=30, **model):
+        assert math.dist((obj["x"], obj["y"]), (PLAYER["x"], PLAYER["y"])) >= 256
+
+
+def test_without_coins_every_walking_enemy_stays_reachable():
+    # An arena: the level is won by defeating every enemy, so none may be walled in.
+    enemies = [{"id": f"e{i}", "kind": kind, "x": 400 + 300 * i, "y": 480}
+               for i, kind in enumerate(("enemy", "spider", "brute"))]
+    arena = [PLAYER] + enemies
+    objects = generate(scene=arena, count=30, difficulty=0.95)
+    reachable = reachable_ids(arena + objects, (PLAYER["x"], PLAYER["y"]), {"enemy", "spider", "brute"})
+    assert {"e0", "e1", "e2"} <= reachable
+
+
+def test_a_chest_stays_reachable_from_beside_it():
+    chest = {"id": "loot", "kind": "chest", "x": 800, "y": 480}
+    scene = SCENE + [chest]
+    objects = generate(scene=scene, count=30, difficulty=0.95)
+    assert "loot" in reachable_ids(scene + objects, (PLAYER["x"], PLAYER["y"]), {"chest"})

@@ -55,8 +55,10 @@ exact numbers are in [docs/learning.md](docs/learning.md).
 ## Physics rules the generator follows
 
 - Every obstacle is inside the world and does not overlap anything (AABB with a 4 px gap).
-- Nothing within 128 px of the player's spawn point, and no enemy within 256 px.
-- A solid obstacle (box, wall, house, tree) is rejected if it cuts off a coin the player could reach.
+- Nothing within 128 px of the player's spawn point, and no enemy of any kind within 256 px.
+- A solid obstacle (box, wall, house, tree...) is rejected if it cuts off a coin, chest or item the
+  player could reach; in a level without coins (won by defeating every enemy) it may not wall in an
+  enemy that walks either.
 - Objects asked for with `/generate` are pushed out of what already exists, like Arcade Physics would.
 - Same scene and same model give the same obstacles, so results are repeatable.
 
