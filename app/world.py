@@ -45,6 +45,9 @@ SIZES = {
     "bush": (30, 28),
 }
 
+# Enemies that cannot cross walls (bats and ghosts fly over them). In a level
+# without coins the player wins by defeating every enemy, so these must stay reachable.
+GROUND_ENEMY_KINDS = frozenset({"enemy", "spider", "brute"})
 # Kinds the player cannot walk through.
 SOLID_KINDS = frozenset({"box", "wall", "house", "tree", "chest", "barrel", "fence", "bush"})
 # Kinds that hurt the player.

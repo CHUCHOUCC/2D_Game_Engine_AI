@@ -4,9 +4,17 @@ import math
 import random
 
 from app.learning.model import LevelModel
-from app.navigation import OccupancyGrid, reachable_cells, reachable_coin_ids
+from app.navigation import OccupancyGrid, reachable_cells, reachable_ids
 from app.physics import AABB
-from app.world import SOLID_KINDS, TILE_SIZE, WORLD_HEIGHT, WORLD_WIDTH
+from app.world import (
+    ENEMY_KINDS,
+    GROUND_ENEMY_KINDS,
+    REWARD_KINDS,
+    SOLID_KINDS,
+    TILE_SIZE,
+    WORLD_HEIGHT,
+    WORLD_WIDTH,
+)
 
 # Never put obstacles right on top of the spawn point.
 SPAWN_SAFE_RADIUS = 128
@@ -24,7 +32,9 @@ class ObstacleGenerator:
     Rules every obstacle obeys (checked with the physics boxes and the grid):
     - inside the world, not overlapping anything (AABB with padding);
     - far enough from the player's spawn point;
-    - solid obstacles never cut off a coin the player could reach before.
+    - solid obstacles never cut off a coin, chest or item the player could
+      reach before; in a level without coins (won by defeating every enemy),
+      not an enemy that walks either.
     Higher difficulty puts obstacles closer to the coins and the player's way.
     """
 
@@ -76,16 +86,24 @@ class ObstacleGenerator:
         box = AABB.of_object(obj)
         if not box.inside(WORLD_WIDTH, WORLD_HEIGHT):
             return False
-        safe = ENEMY_SAFE_RADIUS if obj["kind"] == "enemy" else SPAWN_SAFE_RADIUS
+        safe = ENEMY_SAFE_RADIUS if obj["kind"] in ENEMY_KINDS else SPAWN_SAFE_RADIUS
         if math.dist((obj["x"], obj["y"]), spawn) < safe:
             return False
         return not any(box.overlaps(other, PADDING) for other in boxes)
 
     @staticmethod
-    def _keeps_coins(scene: list, obj: dict, spawn: tuple[float, float], reachable: set) -> bool:
+    def goal_kinds(scene: list) -> frozenset:
+        """What the player must be able to reach: coins and rewards; without coins, the enemies too."""
+        kinds = frozenset({"coin"}) | REWARD_KINDS
+        if not any(obj["kind"] == "coin" for obj in scene):
+            kinds |= GROUND_ENEMY_KINDS
+        return kinds
+
+    @staticmethod
+    def _keeps_goals(scene: list, obj: dict, spawn: tuple[float, float], reachable: set, kinds) -> bool:
         if obj["kind"] not in SOLID_KINDS or not reachable:
             return True
-        return reachable <= reachable_coin_ids(scene + [obj], spawn)
+        return reachable <= reachable_ids(scene + [obj], spawn, kinds)
 
     def generate(self, scene: list, count: int | None = None) -> list:
         """New obstacles for the scene (the scene itself is not changed)."""
@@ -93,7 +111,8 @@ class ObstacleGenerator:
         rng = self._rng_for(scene, count)
         spawn = self.spawn_of(scene)
         coins = [obj for obj in scene if obj["kind"] == "coin"]
-        reachable = reachable_coin_ids(scene, spawn)
+        goals = self.goal_kinds(scene)
+        reachable = reachable_ids(scene, spawn, goals)
         boxes = [AABB.of_object(obj) for obj in scene]
         used_ids = {str(obj["id"]) for obj in scene}
         working = list(scene)
@@ -107,8 +126,8 @@ class ObstacleGenerator:
                 if self._fits(candidate, boxes, spawn):
                     options.append((self._score(rng, x, y, coins), candidate))
             options.sort(key=lambda option: -option[0])
-            # The best few that do not cut a coin off; checking all would be slow.
-            obj = next((c for _, c in options[:5] if self._keeps_coins(working, c, spawn, reachable)), None)
+            # The best few that do not cut a goal off; checking all would be slow.
+            obj = next((c for _, c in options[:5] if self._keeps_goals(working, c, spawn, reachable, goals)), None)
             if obj is None:
                 continue
             obj["id"] = _new_id(kind, used_ids)

@@ -47,3 +47,21 @@ def reachable_coin_ids(scene: list, spawn: tuple[float, float]) -> set:
         str(obj["id"]) for obj in scene
         if obj["kind"] == "coin" and grid.cell_of(obj["x"], obj["y"]) in area
     }
+
+
+def reachable_ids(scene: list, spawn: tuple[float, float], kinds) -> set:
+    """Ids of the objects of the given kinds the player can walk up to.
+
+    An object counts as reachable when its own tile, or a tile next to it, can
+    be reached: a chest is solid, but the player opens it from beside it.
+    """
+    grid = OccupancyGrid.from_scene(scene)
+    area = reachable_cells(grid, grid.cell_of(*spawn))
+    found = set()
+    for obj in scene:
+        if obj["kind"] not in kinds:
+            continue
+        col, row = grid.cell_of(obj["x"], obj["y"])
+        if any((col + dc, row + dr) in area for dc, dr in ((0, 0),) + NEIGHBOURS):
+            found.add(str(obj["id"]))
+    return found
