@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app.agent import GameAgent
 from app.main import app, get_agent
 from app.providers import AiProvider, AiProviderError, SimulatedProvider
+from app.schemas import MAX_SCENE_OBJECTS
 from tests.tokens import KEY, auth
 
 
@@ -53,7 +54,7 @@ def test_provider_failure_returns_502(monkeypatch):
 def test_empty_prompt_and_huge_scene_are_rejected(monkeypatch):
     client = client_with(SimulatedProvider(), monkeypatch)
     assert client.post("/generate", json={"prompt": ""}, headers=auth()).status_code == 422
-    scene = [{"id": str(i), "kind": "box", "x": 1, "y": 1} for i in range(601)]
+    scene = [{"id": str(i), "kind": "box", "x": 1, "y": 1} for i in range(MAX_SCENE_OBJECTS + 1)]
     assert client.post("/generate", json={"prompt": "x", "scene": scene}, headers=auth()).status_code == 422
 
 
