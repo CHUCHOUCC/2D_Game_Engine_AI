@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-MAX_SCENE_OBJECTS = 600
+MAX_SCENE_OBJECTS = 1500  # same as the backend: a whole city with its roads
 
 
 class SceneObject(BaseModel):

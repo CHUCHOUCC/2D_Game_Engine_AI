@@ -8,13 +8,16 @@ TILE_SIZE = 32
 ALL_KINDS = (
     "player", "box", "wall", "house", "tree", "spike", "coin", "enemy", "villager", "knight", "wizard",
     "bat", "spider", "ghost", "brute", "chest", "potion", "sword", "axe", "wand", "bow", "barrel", "fence", "bush",
+    "dagger", "hammer", "spear", "staff", "path",
 )
 # 2D characters: friendly people that walk around and talk. They are never obstacles.
 CHARACTER_KINDS = frozenset({"villager", "knight", "wizard"})
 # Every kind of enemy; they all chase and hurt the player.
 ENEMY_KINDS = frozenset({"enemy", "bat", "spider", "ghost", "brute"})
 # Rewards: a chest drops an item; weapons and potions are picked up. Never obstacles.
-REWARD_KINDS = frozenset({"chest", "potion", "sword", "axe", "wand", "bow"})
+REWARD_KINDS = frozenset({"chest", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff"})
+# Ground drawn under everything (roads, stone): no body, never an obstacle.
+GROUND_KINDS = frozenset({"path"})
 GENERATED_KINDS = tuple(kind for kind in ALL_KINDS if kind != "player")
 
 # Width and height of each kind in pixels; x and y of an object are its centre.
@@ -43,6 +46,11 @@ SIZES = {
     "barrel": (28, 30),
     "fence": (32, 16),
     "bush": (30, 28),
+    "dagger": (16, 24),
+    "hammer": (24, 28),
+    "spear": (16, 32),
+    "staff": (16, 32),
+    "path": (32, 32),
 }
 
 # Enemies that cannot cross walls (bats and ghosts fly over them). In a level
@@ -54,10 +62,11 @@ SOLID_KINDS = frozenset({"box", "wall", "house", "tree", "chest", "barrel", "fen
 HAZARD_KINDS = frozenset({"spike"}) | ENEMY_KINDS
 # Kinds that are picked up.
 COLLECTIBLE_KINDS = frozenset({"coin"})
-# Kinds the generator treats as obstacles (everything but coins, rewards and characters).
+# Kinds the generator treats as obstacles (everything but coins, rewards, characters and ground).
 OBSTACLE_KINDS = tuple(
     kind for kind in GENERATED_KINDS
     if kind not in COLLECTIBLE_KINDS and kind not in CHARACTER_KINDS and kind not in REWARD_KINDS
+    and kind not in GROUND_KINDS
 )
 
 

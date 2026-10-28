@@ -29,10 +29,18 @@ KIND_PHYSICS = {
     "barrel": (False, 3.0, 500.0, 0.0),
     "fence": (True, 1.0, 0.0, 0.0),
     "bush": (True, 1.0, 0.0, 0.0),
+    "dagger": (True, 1.0, 0.0, 0.0),
+    "hammer": (True, 1.0, 0.0, 0.0),
+    "spear": (True, 1.0, 0.0, 0.0),
+    "staff": (True, 1.0, 0.0, 0.0),
+    "path": (True, 1.0, 0.0, 0.0),
 }
 
 # Kinds that overlap instead of blocking: pick-ups, traps and enemies that fly or float.
-NOT_SOLID = frozenset({"coin", "spike", "potion", "sword", "axe", "wand", "bow", "bat", "ghost"})
+NOT_SOLID = frozenset({
+    "coin", "spike", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff",
+    "bat", "ghost", "path",
+})
 
 
 @dataclass
