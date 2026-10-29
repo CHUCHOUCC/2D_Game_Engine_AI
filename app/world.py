@@ -9,15 +9,18 @@ ALL_KINDS = (
     "player", "box", "wall", "house", "tree", "spike", "coin", "enemy", "villager", "knight", "wizard",
     "bat", "spider", "ghost", "brute", "chest", "potion", "sword", "axe", "wand", "bow", "barrel", "fence", "bush",
     "dagger", "hammer", "spear", "staff", "path",
+    "water", "sand", "bridge", "marksman", "necromancer", "demon", "mimic", "rat",
 )
 # 2D characters: friendly people that walk around and talk. They are never obstacles.
 CHARACTER_KINDS = frozenset({"villager", "knight", "wizard"})
 # Every kind of enemy; they all chase and hurt the player.
-ENEMY_KINDS = frozenset({"enemy", "bat", "spider", "ghost", "brute"})
+ENEMY_KINDS = frozenset({"enemy", "bat", "spider", "ghost", "brute", "marksman", "necromancer", "demon", "mimic", "rat"})
 # Rewards: a chest drops an item; weapons and potions are picked up. Never obstacles.
 REWARD_KINDS = frozenset({"chest", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff"})
 # Ground drawn under everything (roads, stone): no body, never an obstacle.
-GROUND_KINDS = frozenset({"path"})
+GROUND_KINDS = frozenset({"path", "sand", "bridge"})
+# Terrain painted tile by tile (water): solid for walking, but never a random obstacle.
+TERRAIN_KINDS = frozenset({"water"})
 GENERATED_KINDS = tuple(kind for kind in ALL_KINDS if kind != "player")
 
 # Width and height of each kind in pixels; x and y of an object are its centre.
@@ -51,13 +54,21 @@ SIZES = {
     "spear": (16, 32),
     "staff": (16, 32),
     "path": (32, 32),
+    "water": (32, 32),
+    "sand": (32, 32),
+    "bridge": (32, 32),
+    "marksman": (24, 28),
+    "necromancer": (24, 28),
+    "demon": (56, 56),
+    "mimic": (30, 28),
+    "rat": (24, 20),
 }
 
 # Enemies that cannot cross walls (bats and ghosts fly over them). In a level
 # without coins the player wins by defeating every enemy, so these must stay reachable.
-GROUND_ENEMY_KINDS = frozenset({"enemy", "spider", "brute"})
+GROUND_ENEMY_KINDS = frozenset({"enemy", "spider", "brute", "marksman", "necromancer", "demon", "mimic", "rat"})
 # Kinds the player cannot walk through.
-SOLID_KINDS = frozenset({"box", "wall", "house", "tree", "chest", "barrel", "fence", "bush"})
+SOLID_KINDS = frozenset({"box", "wall", "house", "tree", "chest", "barrel", "fence", "bush", "water"})
 # Kinds that hurt the player.
 HAZARD_KINDS = frozenset({"spike"}) | ENEMY_KINDS
 # Kinds that are picked up.
@@ -66,7 +77,7 @@ COLLECTIBLE_KINDS = frozenset({"coin"})
 OBSTACLE_KINDS = tuple(
     kind for kind in GENERATED_KINDS
     if kind not in COLLECTIBLE_KINDS and kind not in CHARACTER_KINDS and kind not in REWARD_KINDS
-    and kind not in GROUND_KINDS
+    and kind not in GROUND_KINDS and kind not in TERRAIN_KINDS
 )
 
 
