@@ -1,4 +1,4 @@
-from app.navigation import OccupancyGrid, path_length, reachable_cells, reachable_coin_ids
+from app.navigation import OccupancyGrid, path_length, reachable_cells, reachable_coin_ids, shortest_path
 from app.physics import AABB
 
 
@@ -49,3 +49,42 @@ def test_reachable_coin_ids():
     coins = [{"id": "near", "kind": "coin", "x": 100, "y": 100}, {"id": "far", "kind": "coin", "x": 800, "y": 100}]
     assert reachable_coin_ids(walls + coins, (50, 50)) == {"near"}
     assert reachable_coin_ids(coins, (50, 50)) == {"near", "far"}
+
+
+def walled_grid():
+    """5x3 grid with a wall in column 2 that leaves a gap only in row 2."""
+    grid = OccupancyGrid(cols=5, rows=3)
+    grid.block_box(AABB(2 * 32 + 16, 16, 16, 16))
+    grid.block_box(AABB(2 * 32 + 16, 48, 16, 16))
+    return grid
+
+
+def test_shortest_path_comes_out_in_walking_order():
+    path = shortest_path(walled_grid(), (0, 0), (4, 0))
+    assert path[0] == (0, 0) and path[-1] == (4, 0)
+    assert len(path) == 9  # 8 steps, both ends included
+    assert (2, 2) in path  # the only gap in the wall
+
+
+def test_every_step_of_the_path_is_one_tile_away_and_free():
+    grid = walled_grid()
+    path = shortest_path(grid, (0, 0), (4, 0))
+    for (c1, r1), (c2, r2) in zip(path, path[1:]):
+        assert abs(c1 - c2) + abs(r1 - r2) == 1
+        assert grid.is_free(c2, r2)
+
+
+def test_the_path_to_the_same_tile_is_that_tile():
+    assert shortest_path(walled_grid(), (1, 1), (1, 1)) == [(1, 1)]
+
+
+def test_there_is_no_path_to_a_blocked_or_cut_off_tile():
+    grid = walled_grid()
+    assert shortest_path(grid, (0, 0), (2, 0)) is None
+    grid.block_box(AABB(2 * 32 + 16, 80, 16, 16))  # closes the gap
+    assert shortest_path(grid, (0, 0), (4, 0)) is None
+
+
+def test_the_path_is_as_long_as_path_length_says():
+    grid = walled_grid()
+    assert len(shortest_path(grid, (0, 0), (4, 0))) - 1 == path_length(grid, (0, 0), (4, 0))

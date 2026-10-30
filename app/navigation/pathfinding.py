@@ -41,6 +41,40 @@ def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, in
     return None
 
 
+def shortest_path(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, int]):
+    """The tiles of the shortest walk from start to goal (both included), or None if blocked.
+
+    Breadth first search remembers from which tile each tile was reached; the walk is
+    then rebuilt from the goal back to the start. That comes out reversed, so the tiles
+    are pushed on our Stack and popped to get them in walking order.
+    """
+    if not grid.is_free(*start) or not grid.is_free(*goal):
+        return None
+    came_from = {start: None}
+    pending = Queue()
+    pending.enqueue(start)
+    while not pending.is_empty():
+        cell = pending.dequeue()
+        if cell == goal:
+            break
+        for dc, dr in NEIGHBOURS:
+            nxt = (cell[0] + dc, cell[1] + dr)
+            if nxt not in came_from and grid.is_free(*nxt):
+                came_from[nxt] = cell
+                pending.enqueue(nxt)
+    if goal not in came_from:
+        return None
+    backwards = Stack()
+    step = goal
+    while step is not None:
+        backwards.push(step)
+        step = came_from[step]
+    path = []
+    while not backwards.is_empty():
+        path.append(backwards.pop())
+    return path
+
+
 def reachable_coin_ids(scene: list, spawn: tuple[float, float]) -> set:
     """Ids of the coins whose tile is reachable from the spawn point."""
     grid = OccupancyGrid.from_scene(scene)
