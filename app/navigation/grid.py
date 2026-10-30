@@ -1,4 +1,5 @@
 from app.physics.aabb import AABB
+from app.structures import DynamicArray
 from app.world import HAZARD_KINDS, SOLID_KINDS, TILE_SIZE, WORLD_HEIGHT, WORLD_WIDTH
 
 
@@ -13,7 +14,8 @@ class OccupancyGrid:
         self.cols = cols
         self.rows = rows
         self.tile = tile
-        self._blocked = [[False] * cols for _ in range(rows)]
+        # One flat array of cols * rows flags: tile (col, row) lives at row * cols + col.
+        self._blocked = DynamicArray.filled(cols * rows, False)
 
     def cell_of(self, x: float, y: float) -> tuple[int, int]:
         col = min(self.cols - 1, max(0, int(x // self.tile)))
@@ -26,8 +28,11 @@ class OccupancyGrid:
     def in_bounds(self, col: int, row: int) -> bool:
         return 0 <= col < self.cols and 0 <= row < self.rows
 
+    def _index(self, col: int, row: int) -> int:
+        return row * self.cols + col
+
     def is_free(self, col: int, row: int) -> bool:
-        return self.in_bounds(col, row) and not self._blocked[row][col]
+        return self.in_bounds(col, row) and not self._blocked[self._index(col, row)]
 
     def block_box(self, box: AABB) -> None:
         """Block every tile the box covers (touching an edge does not count)."""
@@ -35,7 +40,7 @@ class OccupancyGrid:
         last_col, last_row = self.cell_of(box.right - 0.01, box.bottom - 0.01)
         for row in range(first_row, last_row + 1):
             for col in range(first_col, last_col + 1):
-                self._blocked[row][col] = True
+                self._blocked[self._index(col, row)] = True
 
     @classmethod
     def from_scene(cls, scene: list, avoid_hazards: bool = False) -> "OccupancyGrid":
@@ -47,4 +52,4 @@ class OccupancyGrid:
         return grid
 
     def free_count(self) -> int:
-        return sum(1 for row in self._blocked for cell in row if not cell)
+        return sum(1 for blocked in self._blocked if not blocked)
