@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response
 
 from .agent import AgentError, GameAgent
+from .cache import cached_generation
 from .hardening import HardeningMiddleware, check_configuration, is_production
 from .learning_api import router as learning_router
 from .providers import AiProviderError, create_provider
@@ -47,9 +48,13 @@ def health():
 
 
 @app.post("/generate", dependencies=[Depends(require_service_token)])
-def generate(body: GenerateRequest, agent: GameAgent = Depends(get_agent)):
+def generate(body: GenerateRequest, response: Response, agent: GameAgent = Depends(get_agent)):
+    scene = scene_dicts(body.scene)
     try:
-        return {"objects": agent.generate(body.prompt, scene_dicts(body.scene))}
+        objects, hit = cached_generation(agent.provider, body.prompt, scene, lambda: agent.generate(body.prompt, scene))
+        # Lets the backend (and the logs) see whether the external AI API was called.
+        response.headers["X-Cache"] = "HIT" if hit else "MISS"
+        return {"objects": objects}
     except AgentError as error:
         raise HTTPException(status_code=502, detail=str(error))
     except AiProviderError as error:

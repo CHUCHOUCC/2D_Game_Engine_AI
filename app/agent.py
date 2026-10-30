@@ -57,6 +57,10 @@ class GameAgent:
     def __init__(self, provider: AiProvider):
         self._provider = provider
 
+    @property
+    def provider(self) -> AiProvider:
+        return self._provider
+
     def generate(self, request: str, scene: list | None = None) -> List[dict]:
         scene = scene or []
         user = f"{describe_scene(scene)}\nRequest: {request}"
