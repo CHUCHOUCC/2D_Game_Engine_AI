@@ -1,5 +1,3 @@
-from collections import deque
-
 from app.structures import Queue, Stack
 
 from .grid import OccupancyGrid
@@ -29,16 +27,17 @@ def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, in
     if not grid.is_free(*start) or not grid.is_free(*goal):
         return None
     distance = {start: 0}
-    pending = deque([start])
-    while pending:
-        cell = pending.popleft()
+    pending = Queue()
+    pending.enqueue(start)
+    while not pending.is_empty():
+        cell = pending.dequeue()
         if cell == goal:
             return distance[cell]
         for dc, dr in NEIGHBOURS:
             nxt = (cell[0] + dc, cell[1] + dr)
             if nxt not in distance and grid.is_free(*nxt):
                 distance[nxt] = distance[cell] + 1
-                pending.append(nxt)
+                pending.enqueue(nxt)
     return None
 
 
