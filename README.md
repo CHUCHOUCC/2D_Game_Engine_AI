@@ -35,6 +35,7 @@ Every route except `/health` needs `Authorization: Bearer <service token>`.
 | `app/generation/` | `ObstacleGenerator`: places obstacles following the model and the physics rules |
 | `app/agent.py` | `GameAgent`: builds the prompt, validates the model's reply and fixes overlaps |
 | `app/providers/` | `simulated` (no network) or `openai_compatible` (any `/chat/completions` API) |
+| `app/lru_cache.py`, `app/cache.py` | Hand-written LRU cache (hash index + doubly linked list, O(1)); `/generate` answers are kept by provider, prompt and scene for `AI_CACHE_TTL` seconds, so a repeated request skips the external API (`X-Cache: HIT`) |
 | `app/security.py` | Checks the service token: signature, audience, issuer, expiry and replay |
 | `app/hardening.py` | Security headers, 1 MB body limit and start-up check of the key |
 | `app/main.py`, `app/learning_api.py` | The HTTP routes |
