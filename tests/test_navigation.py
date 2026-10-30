@@ -88,3 +88,11 @@ def test_there_is_no_path_to_a_blocked_or_cut_off_tile():
 def test_the_path_is_as_long_as_path_length_says():
     grid = walled_grid()
     assert len(shortest_path(grid, (0, 0), (4, 0))) - 1 == path_length(grid, (0, 0), (4, 0))
+
+
+def test_the_flat_array_keeps_tiles_apart_on_a_non_square_grid():
+    grid = OccupancyGrid(cols=7, rows=2)
+    grid.block_box(AABB(6 * 32 + 16, 32 + 16, 16, 16))  # tile (6, 1), the last one
+    assert not grid.is_free(6, 1)
+    assert grid.is_free(6, 0) and grid.is_free(0, 1) and grid.is_free(5, 1)
+    assert grid.free_count() == 7 * 2 - 1
