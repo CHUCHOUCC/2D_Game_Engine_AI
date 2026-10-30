@@ -1,4 +1,5 @@
 """Routes of the learning AI: learn from a run, place obstacles, describe the world."""
+import copy
 from typing import List
 
 from fastapi import APIRouter, Depends
@@ -48,11 +49,19 @@ def obstacles(body: ObstacleRequest):
     }
 
 
-@router.get("/info")
-def info():
+def _world_info() -> dict:
     return {
         "world": {"width": WORLD_WIDTH, "height": WORLD_HEIGHT, "tile": TILE_SIZE},
         "kinds": list(ALL_KINDS),
         "sizes": {kind: list(size) for kind, size in SIZES.items()},
         "default_model": LevelModel().to_dict(),
     }
+
+
+# Built once: the world only changes with a new version of the service.
+_INFO = _world_info()
+
+
+@router.get("/info")
+def info():
+    return copy.deepcopy(_INFO)
