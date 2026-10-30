@@ -1,5 +1,7 @@
 from collections import deque
 
+from app.structures import Queue, Stack
+
 from .grid import OccupancyGrid
 
 NEIGHBOURS = ((1, 0), (-1, 0), (0, 1), (0, -1))
@@ -10,14 +12,15 @@ def reachable_cells(grid: OccupancyGrid, start: tuple[int, int]) -> set:
     if not grid.is_free(*start):
         return set()
     seen = {start}
-    pending = deque([start])
-    while pending:
-        col, row = pending.popleft()
+    pending = Queue()
+    pending.enqueue(start)
+    while not pending.is_empty():
+        col, row = pending.dequeue()
         for dc, dr in NEIGHBOURS:
             cell = (col + dc, row + dr)
             if cell not in seen and grid.is_free(*cell):
                 seen.add(cell)
-                pending.append(cell)
+                pending.enqueue(cell)
     return seen
 
 
