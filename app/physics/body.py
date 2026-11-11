@@ -42,12 +42,39 @@ KIND_PHYSICS = {
     "demon": (False, 12.0, 300.0, 0.0),
     "mimic": (False, 1.5, 200.0, 0.2),
     "rat": (False, 0.5, 100.0, 0.3),
+    "soldier": (False, 1.5, 200.0, 0.2),
+    "grenadier": (False, 1.5, 200.0, 0.2),
+    "tank": (False, 14.0, 300.0, 0.0),
+    "artillery": (True, 1.0, 0.0, 0.0),
+    "legionary": (False, 1.5, 200.0, 0.2),
+    "captain": (False, 4.0, 300.0, 0.0),
+    "ally": (False, 1.0, 300.0, 0.1),
+    "guard": (False, 1.0, 300.0, 0.1),
+    "sandbag": (True, 1.0, 0.0, 0.0),
+    "barricade": (True, 1.0, 0.0, 0.0),
+    "hedgehog": (True, 1.0, 0.0, 0.0),
+    "bunker": (True, 1.0, 0.0, 0.0),
+    "tower": (True, 1.0, 0.0, 0.0),
+    "flag": (True, 1.0, 0.0, 0.0),
+    "banner": (True, 1.0, 0.0, 0.0),
+    "rock": (True, 1.0, 0.0, 0.0),
+    "road": (True, 1.0, 0.0, 0.0),
+    "medkit": (True, 1.0, 0.0, 0.0),
+    "pistol": (True, 1.0, 0.0, 0.0),
+    "rifle": (True, 1.0, 0.0, 0.0),
+    "shotgun": (True, 1.0, 0.0, 0.0),
+    "smg": (True, 1.0, 0.0, 0.0),
+    "sniper": (True, 1.0, 0.0, 0.0),
+    "launcher": (True, 1.0, 0.0, 0.0),
+    "grenade": (True, 1.0, 0.0, 0.0),
+    "explosive": (True, 1.0, 0.0, 0.0),
 }
 
 # Kinds that overlap instead of blocking: pick-ups, traps and enemies that fly or float.
 NOT_SOLID = frozenset({
     "coin", "spike", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff",
     "bat", "ghost", "path", "sand", "bridge",
+    "road", "medkit", "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade",
 })
 
 

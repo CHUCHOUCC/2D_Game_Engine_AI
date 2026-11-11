@@ -10,15 +10,24 @@ ALL_KINDS = (
     "bat", "spider", "ghost", "brute", "chest", "potion", "sword", "axe", "wand", "bow", "barrel", "fence", "bush",
     "dagger", "hammer", "spear", "staff", "path",
     "water", "sand", "bridge", "marksman", "necromancer", "demon", "mimic", "rat",
+    "soldier", "grenadier", "tank", "artillery", "ally", "sandbag", "barricade", "hedgehog", "bunker", "tower",
+    "flag", "banner", "rock", "road", "medkit", "legionary", "captain", "guard",
+    "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade", "explosive",
 )
 # 2D characters: friendly people that walk around and talk. They are never obstacles.
-CHARACTER_KINDS = frozenset({"villager", "knight", "wizard"})
+CHARACTER_KINDS = frozenset({"villager", "knight", "wizard", "ally", "guard"})
 # Every kind of enemy; they all chase and hurt the player.
-ENEMY_KINDS = frozenset({"enemy", "bat", "spider", "ghost", "brute", "marksman", "necromancer", "demon", "mimic", "rat"})
+ENEMY_KINDS = frozenset({
+    "enemy", "bat", "spider", "ghost", "brute", "marksman", "necromancer", "demon", "mimic", "rat",
+    "soldier", "grenadier", "tank", "artillery", "legionary", "captain",
+})
 # Rewards: a chest drops an item; weapons and potions are picked up. Never obstacles.
-REWARD_KINDS = frozenset({"chest", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff"})
+REWARD_KINDS = frozenset({
+    "chest", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff",
+    "medkit", "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade",
+})
 # Ground drawn under everything (roads, stone): no body, never an obstacle.
-GROUND_KINDS = frozenset({"path", "sand", "bridge"})
+GROUND_KINDS = frozenset({"path", "sand", "bridge", "road"})
 # Terrain painted tile by tile (water): solid for walking, but never a random obstacle.
 TERRAIN_KINDS = frozenset({"water"})
 GENERATED_KINDS = tuple(kind for kind in ALL_KINDS if kind != "player")
@@ -62,15 +71,47 @@ SIZES = {
     "demon": (56, 56),
     "mimic": (30, 28),
     "rat": (24, 20),
+    "soldier": (24, 28),
+    "grenadier": (24, 28),
+    "tank": (52, 44),
+    "artillery": (30, 28),
+    "ally": (24, 28),
+    "sandbag": (32, 20),
+    "barricade": (32, 30),
+    "hedgehog": (30, 28),
+    "bunker": (32, 32),
+    "tower": (28, 32),
+    "flag": (20, 30),
+    "banner": (20, 30),
+    "rock": (30, 28),
+    "road": (32, 32),
+    "medkit": (20, 18),
+    "legionary": (24, 30),
+    "captain": (26, 28),
+    "guard": (24, 28),
+    "pistol": (24, 18),
+    "rifle": (32, 14),
+    "shotgun": (32, 14),
+    "smg": (26, 20),
+    "sniper": (32, 14),
+    "launcher": (32, 16),
+    "grenade": (18, 20),
+    "explosive": (28, 30),
 }
 
 # Enemies that cannot cross walls (bats and ghosts fly over them). In a level
 # without coins the player wins by defeating every enemy, so these must stay reachable.
-GROUND_ENEMY_KINDS = frozenset({"enemy", "spider", "brute", "marksman", "necromancer", "demon", "mimic", "rat"})
+GROUND_ENEMY_KINDS = frozenset({
+    "enemy", "spider", "brute", "marksman", "necromancer", "demon", "mimic", "rat",
+    "soldier", "grenadier", "tank", "artillery", "legionary", "captain",
+})
 # Kinds the player cannot walk through.
-SOLID_KINDS = frozenset({"box", "wall", "house", "tree", "chest", "barrel", "fence", "bush", "water"})
+SOLID_KINDS = frozenset({
+    "box", "wall", "house", "tree", "chest", "barrel", "fence", "bush", "water",
+    "sandbag", "barricade", "hedgehog", "bunker", "tower", "flag", "banner", "rock", "explosive",
+})
 # Kinds that hurt the player.
-HAZARD_KINDS = frozenset({"spike"}) | ENEMY_KINDS
+HAZARD_KINDS = frozenset({"spike", "explosive"}) | ENEMY_KINDS
 # Kinds that are picked up.
 COLLECTIBLE_KINDS = frozenset({"coin"})
 # Kinds the generator treats as obstacles (everything but coins, rewards, characters and ground).
