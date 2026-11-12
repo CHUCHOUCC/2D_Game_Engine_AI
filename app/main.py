@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException, Response
 
 from .agent import AgentError, GameAgent
 from .cache import cached_generation
+from .edits import parse_edit, removed_ids
 from .hardening import HardeningMiddleware, check_configuration, is_production
 from .learning_api import router as learning_router
 from .providers import AiProviderError, create_provider
@@ -48,14 +49,31 @@ def health():
 
 
 @app.post("/generate", dependencies=[Depends(require_service_token)])
-def generate(body: GenerateRequest, response: Response, agent: GameAgent = Depends(get_agent)):
+def generate(body: GenerateRequest, response: Response):
+    """Apply a natural-language request to the scene: what it removes and what it adds.
+
+    Removals ("borra los enemigos", "elimina todo") are decided by app/edits.py without calling
+    the model; anything the request also asks to add goes to the model, on the scene without the
+    removed objects. A request that only removes never touches the external API.
+    """
     scene = scene_dicts(body.scene)
-    try:
-        objects, hit = cached_generation(agent.provider, body.prompt, scene, lambda: agent.generate(body.prompt, scene))
-        # Lets the backend (and the logs) see whether the external AI API was called.
-        response.headers["X-Cache"] = "HIT" if hit else "MISS"
-        return {"objects": objects}
-    except AgentError as error:
-        raise HTTPException(status_code=502, detail=str(error))
-    except AiProviderError as error:
-        raise HTTPException(status_code=502, detail=str(error))
+    edit = parse_edit(body.prompt)
+    removed = removed_ids(scene, edit.remove_kinds)
+    gone = set(removed)
+    remaining = [obj for obj in scene if obj["id"] not in gone]
+    objects, hit = [], True
+    if edit.add_request:
+        # Resolved only when needed (a request that only removes works even without a provider);
+        # tests replace it through dependency_overrides as with any dependency.
+        agent = app.dependency_overrides.get(get_agent, get_agent)()
+        try:
+            objects, hit = cached_generation(
+                agent.provider, edit.add_request, remaining, lambda: agent.generate(edit.add_request, remaining)
+            )
+        except AgentError as error:
+            raise HTTPException(status_code=502, detail=str(error))
+        except AiProviderError as error:
+            raise HTTPException(status_code=502, detail=str(error))
+    # Lets the backend (and the logs) see whether the external AI API was called.
+    response.headers["X-Cache"] = "HIT" if hit else "MISS"
+    return {"objects": objects, "removed": removed}

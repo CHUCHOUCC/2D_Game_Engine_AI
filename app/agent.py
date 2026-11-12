@@ -16,7 +16,12 @@ SYSTEM_PROMPT = (
     "Walls and houses block the way, boxes can be pushed, spikes and enemies hurt, coins are collected, "
     "villagers, knights and wizards are friendly characters that walk around, "
     "bats, spiders, ghosts and brutes are enemies, chests drop an item, "
-    "potions heal and swords, axes, wands and bows are weapons the player can pick up."
+    "potions heal and swords, axes, wands and bows are weapons the player can pick up. "
+    "War: soldier, grenadier, legionary and captain are enemy soldiers, tank is a big boss, artillery is a fixed "
+    "cannon; ally and guard are friendly soldiers; sandbag, barricade, hedgehog and rock block the way; bunker and "
+    "tower are buildings; flag (blue, the player's side) and banner (red, the enemy's side) mark the camps; road is "
+    "ground; explosive is a barrel that blows up; medkit heals; pistol, rifle, shotgun, smg, sniper, launcher and "
+    "grenade are firearms. Place objects on free ground, spread out, never more than asked."
 )
 
 
@@ -74,6 +79,9 @@ class GameAgent:
             data = json.loads(text)
         except ValueError as error:
             raise AgentError("The model did not reply with valid JSON") from error
+        # Some models wrap the array: {"objects": [...]}. Accept that too.
+        if isinstance(data, dict):
+            data = next((value for value in data.values() if isinstance(value, list)), data)
         if not isinstance(data, list):
             raise AgentError("The model reply must be a JSON array")
         if len(data) > self.MAX_OBJECTS:
