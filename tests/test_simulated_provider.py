@@ -53,3 +53,33 @@ def test_enemies_items_and_obstacles_in_spanish():
     kinds = [o["kind"] for o in ask(request)]
     assert kinds == ["bat", "spider", "ghost", "brute", "chest", "potion", "sword", "axe", "wand", "bow",
                      "barrel", "fence", "bush"]
+
+
+def test_without_a_position_each_kind_gets_its_own_zone():
+    objects = ask("4 casas, 6 árboles y 8 monedas")
+    centres = {}
+    for o in objects:
+        centres.setdefault(o["kind"], []).append((o["x"], o["y"]))
+    middle = {kind: (sum(x for x, _ in spots) / len(spots), sum(y for _, y in spots) / len(spots)) for kind, spots in centres.items()}
+    # Three kinds, three different places, not one row in the middle.
+    assert len({(round(x), round(y)) for x, y in middle.values()}) == 3
+    assert len({o["y"] for o in objects}) > 1
+
+
+def test_every_object_stays_inside_the_world():
+    from app.world import SIZES, WORLD_HEIGHT, WORLD_WIDTH
+    request = "10 casas, 10 árboles, 10 muros, 10 monedas, 10 cofres, 10 fantasmas, 10 tanques, 10 rocas, 10 torres, 10 cajas, 10 barriles, 10 arbustos, 10 vallas"
+    for o in ask(request):
+        w, h = SIZES[o["kind"]]
+        assert w / 2 <= o["x"] <= WORLD_WIDTH - w / 2
+        assert h / 2 <= o["y"] <= WORLD_HEIGHT - h / 2
+
+
+def test_a_lake_or_a_road_is_a_patch_of_tiles():
+    assert [o["kind"] for o in ask("un lago")].count("water") == 6
+    assert [o["kind"] for o in ask("un camino")].count("path") == 6
+    assert len(ask("una arena")) == 1  # only lakes, rivers, beaches and roads grow
+
+
+def test_a_big_request_never_passes_the_agent_limit():
+    assert len(ask("10 casas, 10 árboles, 10 muros, 10 monedas")) == 30
