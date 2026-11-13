@@ -13,13 +13,15 @@ ALL_KINDS = (
     "soldier", "grenadier", "tank", "artillery", "ally", "sandbag", "barricade", "hedgehog", "bunker", "tower",
     "flag", "banner", "rock", "road", "medkit", "legionary", "captain", "guard",
     "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade", "explosive",
+    # the Western town
+    "saloon", "cabin", "wagon", "hay", "crates", "trough", "cactus", "lamp", "boardwalk", "dirt", "bandit",
 )
 # 2D characters: friendly people that walk around and talk. They are never obstacles.
 CHARACTER_KINDS = frozenset({"villager", "knight", "wizard", "ally", "guard"})
 # Every kind of enemy; they all chase and hurt the player.
 ENEMY_KINDS = frozenset({
     "enemy", "bat", "spider", "ghost", "brute", "marksman", "necromancer", "demon", "mimic", "rat",
-    "soldier", "grenadier", "tank", "artillery", "legionary", "captain",
+    "soldier", "grenadier", "tank", "artillery", "legionary", "captain", "bandit",
 })
 # Rewards: a chest drops an item; weapons and potions are picked up. Never obstacles.
 REWARD_KINDS = frozenset({
@@ -27,7 +29,7 @@ REWARD_KINDS = frozenset({
     "medkit", "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade",
 })
 # Ground drawn under everything (roads, stone): no body, never an obstacle.
-GROUND_KINDS = frozenset({"path", "sand", "bridge", "road"})
+GROUND_KINDS = frozenset({"path", "sand", "bridge", "road", "boardwalk", "dirt"})
 # Terrain painted tile by tile (water): solid for walking, but never a random obstacle.
 TERRAIN_KINDS = frozenset({"water"})
 GENERATED_KINDS = tuple(kind for kind in ALL_KINDS if kind != "player")
@@ -97,18 +99,30 @@ SIZES = {
     "launcher": (32, 16),
     "grenade": (18, 20),
     "explosive": (28, 30),
+    "saloon": (160, 128),
+    "cabin": (96, 96),
+    "wagon": (64, 48),
+    "hay": (32, 32),
+    "crates": (64, 48),
+    "trough": (64, 32),
+    "cactus": (32, 48),
+    "lamp": (32, 64),
+    "boardwalk": (32, 32),
+    "dirt": (32, 32),
+    "bandit": (24, 28),
 }
 
 # Enemies that cannot cross walls (bats and ghosts fly over them). In a level
 # without coins the player wins by defeating every enemy, so these must stay reachable.
 GROUND_ENEMY_KINDS = frozenset({
     "enemy", "spider", "brute", "marksman", "necromancer", "demon", "mimic", "rat",
-    "soldier", "grenadier", "tank", "artillery", "legionary", "captain",
+    "soldier", "grenadier", "tank", "artillery", "legionary", "captain", "bandit",
 })
 # Kinds the player cannot walk through.
 SOLID_KINDS = frozenset({
     "box", "wall", "house", "tree", "chest", "barrel", "fence", "bush", "water",
     "sandbag", "barricade", "hedgehog", "bunker", "tower", "flag", "banner", "rock", "explosive",
+    "saloon", "cabin", "wagon", "hay", "crates", "trough", "cactus", "lamp",
 })
 # Kinds that hurt the player.
 HAZARD_KINDS = frozenset({"spike", "explosive"}) | ENEMY_KINDS

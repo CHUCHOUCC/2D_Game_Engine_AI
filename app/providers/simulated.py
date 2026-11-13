@@ -9,6 +9,18 @@ from .base import AiProvider
 # Keywords per kind, in English and Spanish (with and without accents).
 _KINDS = (
     ("explosive", ("explosive barrel", "barril explosivo", "barriles explosivos", "polvorin", "polvorín")),
+    # The Western town (before "casa", "caja" and "camino", which they contain).
+    ("bandit", ("bandit", "outlaw", "bandido", "pistolero", "forajido")),
+    ("saloon", ("saloon", "cantina")),
+    ("cabin", ("cabin", "cabaña", "cabana")),
+    ("wagon", ("wagon", "carreta", "carro")),
+    ("hay", ("hay", "heno", "fardo", "paja")),
+    ("crates", ("crates", "pila de cajas", "cajas apiladas")),
+    ("trough", ("trough", "abrevadero")),
+    ("cactus", ("cactus", "saguaro")),
+    ("lamp", ("lamp", "farol", "farola")),
+    ("boardwalk", ("boardwalk", "pasarela", "tablones")),
+    ("dirt", ("dirt", "tierra")),
     ("artillery", ("artillery", "artilleria", "artillería", "cañon", "cañón", "canon")),
     ("tank", ("tank", "tanque")),
     ("grenadier", ("grenadier", "granadero")),

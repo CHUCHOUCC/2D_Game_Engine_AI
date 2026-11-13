@@ -68,6 +68,17 @@ KIND_PHYSICS = {
     "launcher": (True, 1.0, 0.0, 0.0),
     "grenade": (True, 1.0, 0.0, 0.0),
     "explosive": (True, 1.0, 0.0, 0.0),
+    "saloon": (True, 1.0, 0.0, 0.0),
+    "cabin": (True, 1.0, 0.0, 0.0),
+    "wagon": (True, 1.0, 0.0, 0.0),
+    "hay": (True, 1.0, 0.0, 0.0),
+    "crates": (True, 1.0, 0.0, 0.0),
+    "trough": (True, 1.0, 0.0, 0.0),
+    "cactus": (True, 1.0, 0.0, 0.0),
+    "lamp": (True, 1.0, 0.0, 0.0),
+    "boardwalk": (True, 1.0, 0.0, 0.0),
+    "dirt": (True, 1.0, 0.0, 0.0),
+    "bandit": (False, 1.5, 200.0, 0.2),
 }
 
 # Kinds that overlap instead of blocking: pick-ups, traps and enemies that fly or float.
@@ -75,6 +86,7 @@ NOT_SOLID = frozenset({
     "coin", "spike", "potion", "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff",
     "bat", "ghost", "path", "sand", "bridge",
     "road", "medkit", "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade",
+    "boardwalk", "dirt",
 })
 
 

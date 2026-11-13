@@ -27,9 +27,10 @@ WEAPON_KINDS = frozenset({
     "sword", "axe", "wand", "bow", "dagger", "hammer", "spear", "staff",
     "pistol", "rifle", "shotgun", "smg", "sniper", "launcher", "grenade",
 })
-BUILDING_KINDS = frozenset({"wall", "house", "fence", "bunker", "tower"})
+BUILDING_KINDS = frozenset({"wall", "house", "fence", "bunker", "tower", "saloon", "cabin"})
 OBSTACLE_KINDS = frozenset({
     "box", "barrel", "spike", "explosive", "sandbag", "barricade", "hedgehog", "rock", "tree", "bush",
+    "wagon", "hay", "crates", "trough", "cactus", "lamp",
 })
 
 # Groups people name in a request -> kinds. The first words that match win for that span of text.
@@ -73,6 +74,11 @@ _KIND_WORDS = {
     "smg": ("subfusil", "metralleta", "smg"), "sniper": ("francotirador", "sniper"),
     "launcher": ("lanzacohetes", "bazooka", "launcher"), "grenade": ("granada", "grenade"),
     "explosive": ("barril explosivo", "barriles explosivos", "explosivo", "explosive"), "coin": ("moneda", "coin"),
+    "saloon": ("saloon", "cantina"), "cabin": ("cabana", "cabin"), "wagon": ("carreta", "carro", "wagon"),
+    "hay": ("fardo", "heno", "paja", "hay"), "crates": ("pila de cajas", "cajas apiladas", "crates"),
+    "trough": ("abrevadero", "trough"), "cactus": ("cactus", "saguaro"), "lamp": ("farol", "farola", "lamp"),
+    "boardwalk": ("pasarela", "tablones", "boardwalk"), "dirt": ("tierra", "dirt"),
+    "bandit": ("bandido", "pistolero", "forajido", "bandit", "outlaw"),
 }
 
 _CLAUSE_SPLIT = re.compile(r"\s*(?:[,;.]|\by luego\b|\by despues\b|\bluego\b|\bdespues\b|\bthen\b|\band\b|\by\b|\be\b)\s*")
