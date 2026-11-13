@@ -9,6 +9,17 @@ from .base import AiProvider
 # Keywords per kind, in English and Spanish (with and without accents).
 _KINDS = (
     ("explosive", ("explosive barrel", "barril explosivo", "barriles explosivos", "polvorin", "polvorín")),
+    # The industrial arena (before "muro", "pared" and "suelo").
+    ("turret", ("turret", "torreta")),
+    ("drone", ("drone", "dron")),
+    ("metalfloor", ("metal floor", "suelo de metal", "placas de metal")),
+    ("hazard", ("hazard", "franja de peligro", "franjas de peligro")),
+    ("steelwall", ("steel wall", "muro de acero", "muros de acero", "pared de acero", "muro metálico", "muro metalico")),
+    ("container", ("container", "contenedor")),
+    ("pipes", ("pipe", "tubería", "tuberia", "tubo")),
+    ("reactor", ("reactor", "generador", "núcleo", "nucleo")),
+    ("beacon", ("beacon", "baliza")),
+    ("barrier", ("barrier", "barrera")),
     # The Western town (before "casa", "caja" and "camino", which they contain).
     ("bandit", ("bandit", "outlaw", "bandido", "pistolero", "forajido")),
     ("saloon", ("saloon", "cantina")),
