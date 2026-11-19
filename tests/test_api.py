@@ -35,7 +35,7 @@ def test_generate_with_a_token_returns_objects(monkeypatch):
     client = client_with(SimulatedProvider(), monkeypatch)
     response = client.post("/generate", json={"prompt": "an enemy at 50 60"}, headers=auth())
     assert response.status_code == 200
-    assert response.json() == {"objects": [{"id": "enemy-1", "kind": "enemy", "x": 50.0, "y": 60.0}]}
+    assert response.json() == {"objects": [{"id": "enemy-1", "kind": "enemy", "x": 50.0, "y": 60.0}], "removed": []}
 
 
 def test_generate_moves_objects_off_the_existing_scene(monkeypatch):
