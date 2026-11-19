@@ -1,4 +1,4 @@
-from collections import deque
+from app.structures import Queue, Stack
 
 from .grid import OccupancyGrid
 
@@ -10,14 +10,15 @@ def reachable_cells(grid: OccupancyGrid, start: tuple[int, int]) -> set:
     if not grid.is_free(*start):
         return set()
     seen = {start}
-    pending = deque([start])
-    while pending:
-        col, row = pending.popleft()
+    pending = Queue()
+    pending.enqueue(start)
+    while not pending.is_empty():
+        col, row = pending.dequeue()
         for dc, dr in NEIGHBOURS:
             cell = (col + dc, row + dr)
             if cell not in seen and grid.is_free(*cell):
                 seen.add(cell)
-                pending.append(cell)
+                pending.enqueue(cell)
     return seen
 
 
@@ -26,17 +27,52 @@ def path_length(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, in
     if not grid.is_free(*start) or not grid.is_free(*goal):
         return None
     distance = {start: 0}
-    pending = deque([start])
-    while pending:
-        cell = pending.popleft()
+    pending = Queue()
+    pending.enqueue(start)
+    while not pending.is_empty():
+        cell = pending.dequeue()
         if cell == goal:
             return distance[cell]
         for dc, dr in NEIGHBOURS:
             nxt = (cell[0] + dc, cell[1] + dr)
             if nxt not in distance and grid.is_free(*nxt):
                 distance[nxt] = distance[cell] + 1
-                pending.append(nxt)
+                pending.enqueue(nxt)
     return None
+
+
+def shortest_path(grid: OccupancyGrid, start: tuple[int, int], goal: tuple[int, int]):
+    """The tiles of the shortest walk from start to goal (both included), or None if blocked.
+
+    Breadth first search remembers from which tile each tile was reached; the walk is
+    then rebuilt from the goal back to the start. That comes out reversed, so the tiles
+    are pushed on our Stack and popped to get them in walking order.
+    """
+    if not grid.is_free(*start) or not grid.is_free(*goal):
+        return None
+    came_from = {start: None}
+    pending = Queue()
+    pending.enqueue(start)
+    while not pending.is_empty():
+        cell = pending.dequeue()
+        if cell == goal:
+            break
+        for dc, dr in NEIGHBOURS:
+            nxt = (cell[0] + dc, cell[1] + dr)
+            if nxt not in came_from and grid.is_free(*nxt):
+                came_from[nxt] = cell
+                pending.enqueue(nxt)
+    if goal not in came_from:
+        return None
+    backwards = Stack()
+    step = goal
+    while step is not None:
+        backwards.push(step)
+        step = came_from[step]
+    path = []
+    while not backwards.is_empty():
+        path.append(backwards.pop())
+    return path
 
 
 def reachable_coin_ids(scene: list, spawn: tuple[float, float]) -> set:

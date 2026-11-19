@@ -40,6 +40,20 @@ Every route except `/health` needs `Authorization: Bearer <service token>`.
 | `app/hardening.py` | Security headers, 1 MB body limit and start-up check of the key |
 | `app/main.py`, `app/learning_api.py` | The HTTP routes |
 
+## Data structures (hand-written)
+
+No native `deque`, `queue.Queue` or `heapq` is used in the service; `tests/test_hand_written_structures_only.py` enforces it.
+
+| Structure | File | Where it is used |
+|---|---|---|
+| Dynamic array (ctypes block, doubling) | `app/structures/dynamic_array.py` | `OccupancyGrid` keeps its blocked cells in one array |
+| Stack | `app/structures/stack.py` | `shortest_path` rebuilds the path walking back from the goal |
+| Queue | `app/structures/queue.py` | Breadth-first search frontier in `app/navigation/pathfinding.py` |
+| Singly linked list | `app/structures/linked_list.py` | General-purpose list (stack and queue share its `Node`) |
+| Doubly linked list | `app/structures/doubly_linked_list.py` | Reusable structure with tests; the LRU cache (`app/lru_cache.py`) has its own linked entries |
+| Circular linked list | `app/structures/circular_linked_list.py` | `PatrolRoute`: a lap of tiles that starts over by itself |
+| General tree | `app/structures/tree.py` | `app/kind_tree.py`: world -> category -> kind |
+
 ## How the AI learns
 
 Each finished run becomes a performance score between 0 and 1 (winning, coins, damage,
